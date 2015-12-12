@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, Vector3.zero) > 100.0f)
+        if (Vector3.Distance(transform.position, Vector3.zero) > 150.0f)
         {
             transform.position = Vector3.zero;
         }
