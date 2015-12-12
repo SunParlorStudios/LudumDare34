@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
 
     public Dictionary<World.Resources, int> inventory;
 
+    private Vector3 defaultScale;
+
     public void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -33,6 +35,8 @@ public class Player : MonoBehaviour
         inventory.Add(World.Resources.Type1, 0);
         inventory.Add(World.Resources.Type2, 0);
         inventory.Add(World.Resources.Type3, 0);
+
+        defaultScale = transform.localScale;
     }
 
     public void Update()
@@ -73,7 +77,7 @@ public class Player : MonoBehaviour
         jumpVelocity = Vector3.Lerp(jumpVelocity, Vector3.zero, jumpGravity);
 
         transform.position += jumpVelocity;
-        transform.localScale = new Vector3(speed == 0.0f ? 1.0f : -(Mathf.Abs(speed) / speed), transform.localScale.y, transform.localScale.z);
+        transform.localScale = new Vector3(speed >= 0.0f ? -defaultScale.x : defaultScale.x, transform.localScale.y, transform.localScale.z);
 
         float radius;
 
