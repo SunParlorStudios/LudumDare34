@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(CircleCollider2D))]
 public class World : MonoBehaviour
 {
     public enum Resources
@@ -19,7 +18,7 @@ public class World : MonoBehaviour
 
     public CircleCollider2D worldCollider;
 
-    [Range(1.0f, 20.0f)]
+    [Range(1.0f, 40.0f)]
     public float gravityRadius = 5.0f;
 
     [Range(1.0f, 20.0f)]
@@ -44,6 +43,8 @@ public class World : MonoBehaviour
     public void Update()
     {
         transform.Rotate(new Vector3(0, 0, (rotationDirection == RotationDirection.Left ? rotationSpeed : -rotationSpeed) * Time.deltaTime));
+
+        UpdateScale();
     }
 
     public void OnDrawGizmos()
@@ -54,6 +55,11 @@ public class World : MonoBehaviour
         Gizmos.color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
         Gizmos.DrawWireSphere(transform.position, surfaceRadius);
 
-        //transform.localScale = new Vector3((1.0f / 2.56f) * surfaceRadius, (1.0f / 2.56f) * surfaceRadius);
+        UpdateScale();
+    }
+
+    public void UpdateScale()
+    {
+        transform.localScale = new Vector3((1.0f / 5.12f) * surfaceRadius, (1.0f / 5.12f) * surfaceRadius);
     }
 }

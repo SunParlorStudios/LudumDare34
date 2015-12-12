@@ -9,8 +9,6 @@ public class GameController : MonoBehaviour
     {
         worlds = new List<World>();
 
-        Object worldResource = Resources.Load("World");
-
         GameObject[] sceneWorlds = GameObject.FindGameObjectsWithTag("World");
         for (int i = 0; i < sceneWorlds.Length; i++)
         {
