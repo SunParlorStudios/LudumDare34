@@ -74,8 +74,6 @@ public class Player : MonoBehaviour
 
         transform.position += jumpVelocity;
 
-        transform.localScale = new Vector3(3.0f * (speed == 0.0f ? 1.0f : -(Mathf.Abs(speed) / speed)), transform.localScale.y, transform.localScale.z);
-
         float radius;
 
         for (int i = 0; i < currentWorlds.Count; i++)
@@ -100,7 +98,7 @@ public class Player : MonoBehaviour
                 {
                     float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius);
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), 0.1f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg)), 0.1f);
 
                     normal = (worldPosition - position).normalized;
 
@@ -117,7 +115,7 @@ public class Player : MonoBehaviour
                     float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius) * jumpVelocity.magnitude;
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * newDistance, Mathf.Sin(angle) * newDistance);
 
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), 0.1f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg)), 0.1f);
                 }
             }
 

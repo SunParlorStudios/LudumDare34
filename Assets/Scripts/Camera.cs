@@ -16,7 +16,7 @@ public class Camera : MonoBehaviour
             newPos.z = offset.z;
             transform.position = newPos;
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0.0f, 0.0f, target.transform.localEulerAngles.z)), angularSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0.0f, 0.0f, target.transform.localEulerAngles.z - 90.0f)), angularSpeed * Time.deltaTime);
         }
 	}
 }
