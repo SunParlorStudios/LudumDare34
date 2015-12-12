@@ -12,6 +12,8 @@ public class BaseController : MonoBehaviour
     private float interpolateTime;
     private bool doInterpolate;
 
+    private float baseSurfaceRadius;
+    private float baseGravityRadius;
     private float beginSurfaceRadius;
     private float beginGravityRadius;
     private float endSurfaceRadius;
@@ -21,6 +23,9 @@ public class BaseController : MonoBehaviour
     {
         interpolateTime = 0.0f;
         doInterpolate = false;
+
+        baseSurfaceRadius = world.surfaceRadius;
+        baseGravityRadius = world.gravityRadius;
 
         homeWorld.OnDeliverResources += OnDeliverResources;
     }
@@ -40,8 +45,8 @@ public class BaseController : MonoBehaviour
             numResources += entry.Value;
         }
 
-        endSurfaceRadius = world.surfaceRadius + numResources * growStrengthPerResource;
-        endGravityRadius = world.gravityRadius + numResources * growStrengthPerResource;
+        endSurfaceRadius = baseSurfaceRadius + numResources * growStrengthPerResource;
+        endGravityRadius = baseGravityRadius + numResources * growStrengthPerResource;
     }
 
     public void Update()
