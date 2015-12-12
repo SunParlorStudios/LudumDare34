@@ -7,7 +7,9 @@ public class World : MonoBehaviour
     {
         Type1,
         Type2,
-        Type3
+        Type3,
+        Type4,
+        Type5
     }
 
     public enum RotationDirection
@@ -32,12 +34,49 @@ public class World : MonoBehaviour
     public RotationDirection rotationDirection;
     public float rotationSpeed;
 
+    [Range(0, 20)]public int numberOfPickups = 10;
+    public World.Resources typeOfResource;
+    public float pickUpOffset = 1.0f;
+
     public void Awake()
     {
         resources = new Dictionary<Resources, int>();
         resources.Add(Resources.Type1, 0);
         resources.Add(Resources.Type2, 0);
         resources.Add(Resources.Type3, 0);
+        resources.Add(Resources.Type4, 0);
+        resources.Add(Resources.Type5, 0);
+
+        Object obj;
+
+        switch (typeOfResource)
+        {
+            default:
+            case Resources.Type1:
+                obj = UnityEngine.Resources.Load("PickUps/Pickup1");
+                break;
+            case Resources.Type2:
+                obj = UnityEngine.Resources.Load("PickUps/Pickup2");
+                break;
+            case Resources.Type3:
+                obj = UnityEngine.Resources.Load("PickUps/Pickup3");
+                break;
+            case Resources.Type4:
+                obj = UnityEngine.Resources.Load("PickUps/Pickup4");
+                break;
+            case Resources.Type5:
+                obj = UnityEngine.Resources.Load("PickUps/Pickup5");
+                break;
+        }
+
+        for (int i = 0; i < numberOfPickups; i++)
+        {
+            float angle = (360 / numberOfPickups) * i;
+            GameObject newPickup = (GameObject)Instantiate(obj, Vector3.zero, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle)));
+            newPickup.transform.parent = transform;
+            newPickup.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            newPickup.transform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset));
+        }
     }
 
     public void Update()

@@ -21,7 +21,6 @@ public class Pickup : MonoBehaviour
         if (collider.gameObject.tag == "Player")
         {
             collider.gameObject.GetComponent<Player>().inventory[type]++;
-
             Destroy(gameObject);
         }
     }
