@@ -12,7 +12,7 @@ public class World : MonoBehaviour
     [Range(1.0f, 20.0f)]
     public float surfaceRadius = 2.56f;
 
-    [Range(0.1f, 20.0f)]
+    [Range(0.1f, 5.0f)]
     public float gravityStrength = 0.5f;
 
     public void OnDrawGizmos()
@@ -22,5 +22,7 @@ public class World : MonoBehaviour
 
         Gizmos.color = new Color(1.0f, 0.5f, 0.5f, 1.0f);
         Gizmos.DrawWireSphere(transform.position, surfaceRadius);
+
+        transform.localScale = new Vector3((1.0f / 2.56f) * surfaceRadius, (1.0f / 2.56f) * surfaceRadius);
     }
 }
