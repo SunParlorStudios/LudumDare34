@@ -69,6 +69,12 @@ public class Player : MonoBehaviour
 
         float radius;
 
+        if (lastWorld != null)
+        {
+            float playerAngle = Mathf.Atan2(transform.position.y - lastWorld.transform.position.y, transform.position.x - lastWorld.transform.position.x);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, playerAngle * Mathf.Rad2Deg)), 0.1f);
+        }
+
         for (int i = 0; i < currentWorlds.Count; i++)
         {
             if (currentWorlds[i] == lastWorld && grounded == false && lastWorld != null && currentWorlds.Count > 1)
