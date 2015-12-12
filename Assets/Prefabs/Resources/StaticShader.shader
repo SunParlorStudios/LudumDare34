@@ -65,9 +65,9 @@
 				}
 
 				r = rand(i.uv + _CosTime);
-				col += pow(r, 0.25f) * 0.2f;
+				col += pow(r, 0.25f) * 0.15f;
 
-				col += fmod(i.uv.y, 0.02f) * 1.25f;
+				col += fmod(i.uv.y, 0.02f) * 0.65f;
 				return col;
 			}
 			ENDCG
