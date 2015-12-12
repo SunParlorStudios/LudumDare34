@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     private Vector3 jumpVelocity;
     private World lastWorld;
 
+    private float wobbleTimer;
+
     public Dictionary<World.Resources, int> inventory;
 
     private Vector3 defaultScale;
@@ -41,6 +43,23 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
+        wobbleTimer += Time.deltaTime;
+
+        if (wobbleTimer > Mathf.PI * 2.0f)
+        {
+            wobbleTimer = 0.0f;
+        }
+
+        float a = (transform.rotation.z + 90.0f) * Mathf.Deg2Rad;
+        float r = Mathf.Sin(wobbleTimer) * 0.5f;
+        Vector3 p;
+        for (int i = 0; i < transform.childCount; ++i)
+        {
+            p = transform.GetChild(i).transform.localPosition;
+
+            transform.GetChild(i).transform.localPosition = new Vector3(Mathf.Cos(a) * r, Mathf.Sin(a) * r, p.z);
+        }
+
         if (grounded == false)
         {
             return;
@@ -65,6 +84,11 @@ public class Player : MonoBehaviour
     public void FixedUpdate()
     {
         currentWorlds = gameController.FindInGravityRadius(transform.position);
+
+        if (currentWorlds.Count == 0 && lastWorld != null)
+        {
+            currentWorlds.Add(lastWorld);
+        }
 
         Vector3 worldPosition;
         Vector3 position;
