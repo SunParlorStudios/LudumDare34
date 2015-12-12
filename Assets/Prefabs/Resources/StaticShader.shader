@@ -15,6 +15,7 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma target 3.0
 			
 			#include "UnityCG.cginc"
 
@@ -39,31 +40,34 @@
 			}
 			
 			sampler2D _MainTex;
-			float _Shift;
-			float _Frequency;
+			half _Shift;
+			half _Frequency;
 
-			float rand(float2 co) 
+			half rand(half2 co) 
 			{
-				return frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453);
+				return frac(sin(dot(co.xy, half2(12.989, 78.23))) * 4375.545);
 			}
 
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 				
-				float r = rand(float2(_SinTime.r + sin(_Time.r * 2.0f), _CosTime.r));
+				half r = rand(half2(_SinTime.r + sin(_Time.r * 2.0f), _CosTime.r));
 				if (r <= _Frequency)
 				{
-					float2 coords = float2(i.uv.x + sin(i.uv.y * 20.0f + _Time.r * 700.0f) * 0.01f, i.uv.y);
+					half2 coords = half2(i.uv.x + sin(i.uv.y * 20.0f + _Time.r * 700.0f) * 0.01f, i.uv.y);
 					col *= 0.25f;
-					col += (tex2D(_MainTex, coords - float2(_Shift * 5.0f, _Shift))) * float4(1.0f, 0.0f, 0.0f, 1.0f);
-					col += (tex2D(_MainTex, coords - float2(-_Shift * 5.0f, _Shift))) * float4(0.0f, 1.0f, 0.0f, 1.0f);
-					col += (tex2D(_MainTex, coords - float2(_Shift, _Shift * 5.0f))) * float4(0.0f, 0.0f, 1.0f, 1.0f);
+					col += (tex2D(_MainTex, coords - half2(_Shift * 5.0f, _Shift))) * half4(1.0f, 0.0f, 0.0f, 1.0f);
+					col += (tex2D(_MainTex, coords - half2(-_Shift * 5.0f, _Shift))) * half4(0.0f, 1.0f, 0.0f, 1.0f);
+					col += (tex2D(_MainTex, coords - half2(_Shift, _Shift * 5.0f))) * half4(0.0f, 0.0f, 1.0f, 1.0f);
 
 				
 				}
+
 				r = rand(i.uv + _CosTime);
-				col += pow(r, 0.25f) * 0.125f;
+				col += pow(r, 0.25f) * 0.15f;
+
+				col += fmod(i.uv.y, 0.02f) * 0.65f;
 				return col;
 			}
 			ENDCG

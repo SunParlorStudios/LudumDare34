@@ -9,15 +9,14 @@ public class Player : MonoBehaviour
 
     public float deceleration = 0.1f;
     public float maxSpeed = 0.2f;
-    public float maxJumpHeight = 2.0f;
-    public float jumpGravity = 0.1f;
+    public float flySpeed = 0.4f;
     public float playerRadius;
 
     private float speed;
     private bool grounded;
 
     private Vector3 normal;
-    private Vector3 jumpVelocity;
+    private Vector3 flyVelocity;
     private World lastWorld;
 
     private float wobbleTimer;
@@ -25,12 +24,13 @@ public class Player : MonoBehaviour
     public Dictionary<World.Resources, int> inventory;
 
     private Vector3 defaultScale;
+    private float defaultZ;
 
     public void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         speed = 0.0f;
-        jumpVelocity = Vector3.zero;
+        flyVelocity = Vector3.zero;
         lastWorld = null;
 
         inventory = new Dictionary<World.Resources, int>();
@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
         inventory.Add(World.Resources.Type5, 0);
 
         defaultScale = transform.localScale;
+        defaultZ = transform.position.z;
     }
 
     public void Update()
@@ -78,13 +79,18 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.UpArrow) == true)
         {
-            jumpVelocity = normal * -1.0f * maxJumpHeight;
+            flyVelocity = normal * -1.0f * flySpeed;
             grounded = false;
         }
     }
 
     public void FixedUpdate()
     {
+        if (Vector3.Distance(transform.position, Vector3.zero) > 150.0f)
+        {
+            transform.position = Vector3.zero;
+        }
+
         currentWorlds = gameController.FindInGravityRadius(transform.position);
 
         Vector3 worldPosition;
@@ -93,11 +99,10 @@ public class Player : MonoBehaviour
         if (grounded == true)
         {
             speed = Mathf.Clamp(Mathf.Lerp(speed, 0.0f, deceleration), -maxSpeed, maxSpeed);
+            flyVelocity = Vector3.zero;
         }
 
-        jumpVelocity = Vector3.Lerp(jumpVelocity, Vector3.zero, jumpGravity);
-
-        transform.position += jumpVelocity;
+        transform.position += flyVelocity;
         transform.localScale = new Vector3(speed >= 0.0f ? -defaultScale.x : defaultScale.x, transform.localScale.y, transform.localScale.z);
 
         float radius;
@@ -138,7 +143,7 @@ public class Player : MonoBehaviour
                 }
                 else if (grounded == false)
                 {
-                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius) * jumpVelocity.magnitude;
+                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius) * flyVelocity.magnitude;
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * newDistance, Mathf.Sin(angle) * newDistance);
 
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), 0.1f);
@@ -147,6 +152,8 @@ public class Player : MonoBehaviour
 
             Debug.DrawLine(position, worldPosition, grounded == true ? Color.green : Color.white);
         }
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, defaultZ);
     }
 
     public void OnDrawGizmos()
