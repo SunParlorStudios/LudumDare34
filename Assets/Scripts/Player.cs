@@ -87,11 +87,6 @@ public class Player : MonoBehaviour
     {
         currentWorlds = gameController.FindInGravityRadius(transform.position);
 
-        if (currentWorlds.Count == 0 && lastWorld != null)
-        {
-            currentWorlds.Add(lastWorld);
-        }
-
         Vector3 worldPosition;
         Vector3 position;
         
