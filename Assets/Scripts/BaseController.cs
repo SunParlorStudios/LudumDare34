@@ -6,11 +6,15 @@ public class BaseController : MonoBehaviour
     public World world;
     public HomeWorld homeWorld;
     public float growStrengthPerResource;
-
     public float smoothing;
+
+    public GameObject[] buildings;
+    public float thresholdSize;
 
     private float interpolateTime;
     private bool doInterpolate;
+
+    private GameObject buildingsObj;
 
     private float baseSurfaceRadius;
     private float baseGravityRadius;
@@ -28,6 +32,8 @@ public class BaseController : MonoBehaviour
         baseGravityRadius = world.gravityRadius;
 
         homeWorld.OnDeliverResources += OnDeliverResources;
+
+        buildingsObj = GameObject.Find("Buildings");
     }
 
     private void OnDeliverResources()
@@ -47,6 +53,21 @@ public class BaseController : MonoBehaviour
 
         endSurfaceRadius = baseSurfaceRadius + numResources * growStrengthPerResource;
         endGravityRadius = baseGravityRadius + numResources * growStrengthPerResource;
+
+        //if (endSurfaceRadius - beginSurfaceRadius > 0.0f)
+        //{
+
+        for (int i = 0; i < 360; i++)
+        {
+            GameObject obj = Instantiate(buildings[(int)(Random.value * buildings.Length)]);
+            obj.transform.parent = buildingsObj.transform;
+
+            float angle = i;
+
+            obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            obj.transform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * (endSurfaceRadius + 2.0f), Mathf.Sin(angle * Mathf.Deg2Rad) * (endSurfaceRadius + 2.0f), -5.0f);
+            obj.transform.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, angle - 90.0f));
+        }
     }
 
     public void Update()
