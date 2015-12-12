@@ -11,6 +11,12 @@ public class World : MonoBehaviour
         Type3
     }
 
+    public enum RotationDirection
+    {
+        Left,
+        Right
+    }
+
     public CircleCollider2D worldCollider;
 
     [Range(1.0f, 20.0f)]
@@ -24,12 +30,20 @@ public class World : MonoBehaviour
 
     public Dictionary<Resources, int> resources;
 
+    public RotationDirection rotationDirection;
+    public float rotationSpeed;
+
     public void Awake()
     {
         resources = new Dictionary<Resources, int>();
         resources.Add(Resources.Type1, 0);
         resources.Add(Resources.Type2, 0);
         resources.Add(Resources.Type3, 0);
+    }
+
+    public void Update()
+    {
+        transform.Rotate(new Vector3(0, 0, (rotationDirection == RotationDirection.Left ? -rotationSpeed : rotationSpeed) * Time.deltaTime));
     }
 
     public void OnDrawGizmos()
