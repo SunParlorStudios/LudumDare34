@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 1978dfbab4ea8b74990f33a8de0611f0
-timeCreated: 1449922510
+timeCreated: 1449930312
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -71,158 +71,158 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_1
       rect:
         serializedVersion: 2
-        x: 500
+        x: 512
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_2
       rect:
         serializedVersion: 2
-        x: 1000
+        x: 1024
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_3
       rect:
         serializedVersion: 2
-        x: 1500
+        x: 1536
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_4
       rect:
         serializedVersion: 2
-        x: 2000
+        x: 2048
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_5
       rect:
         serializedVersion: 2
-        x: 2500
+        x: 2560
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_6
       rect:
         serializedVersion: 2
-        x: 3000
+        x: 3072
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_7
       rect:
         serializedVersion: 2
-        x: 3500
+        x: 3584
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_8
       rect:
         serializedVersion: 2
-        x: 4000
+        x: 4096
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_9
       rect:
         serializedVersion: 2
-        x: 4500
+        x: 4608
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_10
       rect:
         serializedVersion: 2
-        x: 5000
+        x: 5120
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_11
       rect:
         serializedVersion: 2
-        x: 5500
+        x: 5632
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_12
       rect:
         serializedVersion: 2
-        x: 6000
+        x: 6144
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_13
       rect:
         serializedVersion: 2
-        x: 6500
+        x: 6656
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_14
       rect:
         serializedVersion: 2
-        x: 7000
+        x: 7168
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Electric_AstroidsSprite_15
       rect:
         serializedVersion: 2
-        x: 7500
+        x: 7680
         y: 0
-        width: 500
-        height: 537
+        width: 512
+        height: 544
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
