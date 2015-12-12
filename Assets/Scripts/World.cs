@@ -43,7 +43,7 @@ public class World : MonoBehaviour
 
     public void Update()
     {
-        transform.Rotate(new Vector3(0, 0, (rotationDirection == RotationDirection.Left ? -rotationSpeed : rotationSpeed) * Time.deltaTime));
+        transform.Rotate(new Vector3(0, 0, (rotationDirection == RotationDirection.Left ? rotationSpeed : -rotationSpeed) * Time.deltaTime));
     }
 
     public void OnDrawGizmos()
