@@ -32,6 +32,11 @@ public class World : MonoBehaviour
         resources.Add(Resources.Type3, 0);
     }
 
+    public void Update()
+    {
+        transform.Rotate(Vector3.forward, Time.deltaTime * 0.1f);
+    }
+
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
