@@ -77,6 +77,8 @@ public class World : MonoBehaviour
             newPickup.transform.localScale = (transform.localScale * -1).normalized;
             newPickup.transform.position = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset)) + transform.position;
         }
+
+        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, Random.Range(0, 360)));
     }
 
     public Vector3 GetWorldScale(Transform transform)
