@@ -10,21 +10,22 @@ public class Player : MonoBehaviour
     public float deceleration = 0.1f;
     public float maxSpeed = 0.2f;
     public float maxJumpHeight = 2.0f;
+    public float jumpGravity = 0.1f;
     public float playerRadius;
 
     private float speed;
-    private float jump;
     private bool grounded;
 
     private Vector3 normal;
     private Vector3 jumpVelocity;
+    private World lastWorld;
 
     public void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         speed = 0.0f;
-        jump = 0.0f;
         jumpVelocity = Vector3.zero;
+        lastWorld = null;
     }
 
     public void Update()
@@ -62,7 +63,7 @@ public class Player : MonoBehaviour
             speed = Mathf.Clamp(Mathf.Lerp(speed, 0.0f, deceleration), -maxSpeed, maxSpeed);
         }
 
-        jumpVelocity = Vector3.Lerp(jumpVelocity, Vector3.zero, 0.1f);
+        jumpVelocity = Vector3.Lerp(jumpVelocity, Vector3.zero, jumpGravity);
 
         transform.position += jumpVelocity;
 
@@ -70,6 +71,11 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < currentWorlds.Count; i++)
         {
+            if (currentWorlds[i] == lastWorld && grounded == false && lastWorld != null && currentWorlds.Count > 1)
+            {
+                continue;
+            }
+
             worldPosition = currentWorlds[i].transform.position;
             position = transform.position;
 
@@ -86,12 +92,18 @@ public class Player : MonoBehaviour
                     float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius);
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
                     normal = (worldPosition - position).normalized;
+
+                    if (lastWorld != currentWorlds[i])
+                    {
+                        speed *= -1.0f;
+                    }
+
+                    lastWorld = currentWorlds[i];
                     grounded = true;
-                    break;
                 }
                 else if (grounded == false)
                 {
-                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius);
+                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius) * jumpVelocity.magnitude;
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * newDistance, Mathf.Sin(angle) * newDistance);
                 }
             }
