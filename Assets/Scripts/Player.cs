@@ -20,12 +20,19 @@ public class Player : MonoBehaviour
     private Vector3 jumpVelocity;
     private World lastWorld;
 
+    public Dictionary<World.Resources, int> inventory;
+
     public void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         speed = 0.0f;
         jumpVelocity = Vector3.zero;
         lastWorld = null;
+
+        inventory = new Dictionary<World.Resources, int>();
+        inventory.Add(World.Resources.Type1, 0);
+        inventory.Add(World.Resources.Type2, 0);
+        inventory.Add(World.Resources.Type3, 0);
     }
 
     public void Update()
