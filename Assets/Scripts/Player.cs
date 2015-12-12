@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     public Dictionary<World.Resources, int> inventory;
 
     private Vector3 defaultScale;
+    private float defaultZ;
 
     public void Awake()
     {
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
         inventory.Add(World.Resources.Type5, 0);
 
         defaultScale = transform.localScale;
+        defaultZ = transform.position.z;
     }
 
     public void Update()
@@ -147,6 +149,8 @@ public class Player : MonoBehaviour
 
             Debug.DrawLine(position, worldPosition, grounded == true ? Color.green : Color.white);
         }
+
+        transform.position = new Vector3(transform.position.x, transform.position.y, defaultZ);
     }
 
     public void OnDrawGizmos()
