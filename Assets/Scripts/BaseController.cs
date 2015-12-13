@@ -81,12 +81,12 @@ public class BaseController : MonoBehaviour
             cameraController.state = CameraController.State.FocusWorld;
             cameraController.offsetZ = -10 - world.surfaceRadius;
 
-            for (int i = 0; i < gameController.worlds.Count; i++)
+            for (int i = 0; i < worldsToBeSwallowed.Count; i++)
             {
-                for (int j = 0; j < gameController.worlds[i].transform.childCount; j++)
+                for (int j = 0; j < worldsToBeSwallowed[i].transform.childCount; j++)
                 {
-                    if (gameController.worlds[i].transform.GetChild(j).name.Contains("Pickup"))
-                        Destroy(gameController.worlds[i].transform.GetChild(j).gameObject);
+                    if (worldsToBeSwallowed[i].transform.GetChild(j).name.Contains("Pickup"))
+                        Destroy(worldsToBeSwallowed[i].transform.GetChild(j).gameObject);
                 }
             }
         }

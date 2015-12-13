@@ -30,9 +30,6 @@ public class ResourceDeliverer : MonoBehaviour
             if (OnDeliverResources != null && delivered)
             {
                 OnDeliverResources();
-
-
-                Debug.Log("hey faggits ayy " + Time.time);
             }
         }
     }
