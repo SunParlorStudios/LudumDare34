@@ -60,6 +60,15 @@ public class Player : MonoBehaviour
     {
         ExplosionParticle.Create(transform.position);
         transform.position = homeWorld.transform.position;
+        ResetInventory();
+    }
+
+    public void ResetInventory()
+    {
+        for (int i = 0; i < 6; ++i)
+        {
+            inventory[(World.Resources)i] = 0;
+        }
     }
 
     public void Update()

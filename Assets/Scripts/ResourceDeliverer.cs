@@ -16,16 +16,17 @@ public class ResourceDeliverer : MonoBehaviour
 
             bool delivered = false;
 
-            Dictionary<World.Resources, int> newDict = new Dictionary<World.Resources, int>();
+            GameController gameController = baseController.gameController;
+
             foreach (KeyValuePair<World.Resources, int> entry in player.inventory)
             {
                 baseController.resources[entry.Key] += entry.Value;
-                newDict[entry.Key] = 0;
 
                 if (entry.Value > 0)
                     delivered = true;
             }
-            player.inventory = newDict;
+
+            player.ResetInventory();
 
             if (OnDeliverResources != null && delivered)
             {

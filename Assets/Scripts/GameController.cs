@@ -132,6 +132,27 @@ public class GameController : MonoBehaviour
         return false;
     }
 
+    public static int GetValueFromRequirement(LevelRequirements requirement, int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return requirement.ResourcesType1;
+            case 1:
+                return requirement.ResourcesType2;
+            case 2:
+                return requirement.ResourcesType3;
+            case 3:
+                return requirement.ResourcesType4;
+            case 4:
+                return requirement.ResourcesType5;
+            case 5:
+                return requirement.ResourcesType6;
+            default:
+                return 0;
+        }
+    }
+
     public void DestroyWorld(World world)
     {
         for (int i = 0; i < worlds.Count; i++)
