@@ -83,9 +83,11 @@ public class Player : MonoBehaviour
         Vector3 p;
         for (int i = 0; i < transform.childCount; ++i)
         {
-            p = transform.GetChild(i).transform.localPosition;
-
-            transform.GetChild(i).transform.localPosition = new Vector3(Mathf.Cos(a) * r, Mathf.Sin(a) * r, p.z);
+            if (transform.GetChild(i).name != "AsteroidFocusMin" && transform.GetChild(i).name != "AsteroidFocusMax")
+            {
+                p = transform.GetChild(i).transform.localPosition;
+                transform.GetChild(i).transform.localPosition = new Vector3(Mathf.Cos(a) * r, Mathf.Sin(a) * r, p.z);
+            }
         }
 
         if (grounded == false)

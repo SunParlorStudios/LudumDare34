@@ -19,6 +19,10 @@ public class GameController : MonoBehaviour
 
     public LevelRequirements[] requirements;
     public int currentLevel;
+    public GameObject asteroidPrefab;
+    public Player player;
+    public Transform asteroidFocusMin;
+    public Transform asteroidFocusMax;
 
     public void Awake()
     {
@@ -28,6 +32,32 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < sceneWorlds.Length; i++)
         {
             worlds.Add(sceneWorlds[i].GetComponent<World>());
+        }
+
+        asteroidFocusMin = GameObject.Find("AsteroidFocusMin").transform;
+        asteroidFocusMax = GameObject.Find("AsteroidFocusMax").transform;
+    }
+
+    public void FixedUpdate()
+    {
+        if (Random.Range(0, 100) == 50)
+        {
+            Debug.Log("jesis");
+
+            Comet comet = ((GameObject)Instantiate(asteroidPrefab)).GetComponent<Comet>();
+
+            var hitPoint = Vector3.Lerp(asteroidFocusMin.transform.position, asteroidFocusMax.transform.position, Random.Range(0.0f, 1.0f));
+
+            float angle = Random.Range(0, 360) * Mathf.Deg2Rad;
+            Vector3 start = new Vector3(Mathf.Cos(angle) * 50.0f, Mathf.Sin(angle) * 50.0f, 0.0f);
+
+            float angle2 = Mathf.Atan2(start.y - hitPoint.y, start.x - hitPoint.x) + 180 * Mathf.Deg2Rad;
+            Vector3 end = new Vector3(Mathf.Cos(angle2) * 50.0f, Mathf.Sin(angle2) * 50.0f, 0.0f);
+
+            comet.speed = Random.Range(0.3f, 0.4f);
+            comet.transform.position = start + player.transform.position;
+            comet.start = start + player.transform.position;
+            comet.end = end + player.transform.position;
         }
     }
 
