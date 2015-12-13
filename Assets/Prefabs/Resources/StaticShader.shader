@@ -94,7 +94,7 @@
 				half r = rand(half2(_SinTime.r + sin(_Time.r * 2.0f), _CosTime.r));
 				if (r <= _Frequency)
 				{
-					half2 shake = half2(coords.x + sin(coords.y * 20.0f + _Time.r * 700.0f) * 0.01f, i.uv.y);
+					half2 shake = half2(coords.x + sin(coords.y * 20.0f + _Time.r * 700.0f) * 0.01f, coords.y);
 					col *= 0.25f;
 					col += (tex2D(_MainTex, shake - half2(_Shift * 5.0f, _Shift))) * half4(1.0f, 0.0f, 0.0f, 1.0f);
 					col += (tex2D(_MainTex, shake - half2(-_Shift * 5.0f, _Shift))) * half4(0.0f, 1.0f, 0.0f, 1.0f);
@@ -112,9 +112,16 @@
 					bloomMagnitude = ToGray(saturate((col - _Bloom) / (1.0f - _Bloom)));
 				}
 
-				col += fmod(i.uv.y, 0.02f) * 0.65f;
-				r = rand(i.uv + _CosTime);
-				col += pow(r, 0.25f) * 0.15f;
+				half2 centered = coords * 2.0f - 1.0f;
+
+				half length = sqrt(centered.y * centered.y + centered.x * centered.x);
+
+				float rampStart = 0.4f;
+				float ratio = (length * (1.0f - rampStart) + rampStart);
+
+				col += fmod(coords.y, 0.02f) * 2.0f * ratio;
+				r = rand(coords + _CosTime);
+				col += pow(r, 0.25f) * 0.2f * ratio;
 
 				return lerp(col, bloom, bloomMagnitude); //* (0.5f + sin(_Time.r * 10.0f) * 0.5f));
 			}
