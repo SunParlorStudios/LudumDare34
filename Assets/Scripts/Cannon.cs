@@ -28,6 +28,7 @@ public class Cannon : MonoBehaviour
 
         ExplosionParticle.Create(transform.position);
 
+        player.grounded = false;
         player.flyVelocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
         player.flySpeed = force;
         player.ignoreGravityTimer = 0.2f;

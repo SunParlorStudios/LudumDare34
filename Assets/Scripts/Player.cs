@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     public float pickUpStrength = 2.0f;
 
     private float speed;
-    private bool grounded;
+    public bool grounded;
 
     private Vector3 normal;
     public Vector3 flyVelocity;
