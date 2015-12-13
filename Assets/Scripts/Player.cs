@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     private Vector3 normal;
     private Vector3 flyVelocity;
     private World lastWorld;
+    private GameObject homeWorld;
 
     private float wobbleTimer;
 
@@ -47,6 +48,13 @@ public class Player : MonoBehaviour
 
         defaultScale = transform.localScale;
         defaultZ = transform.position.z;
+
+        homeWorld = GameObject.Find("WorldHome");
+    }
+
+    public void Kill()
+    {
+        transform.position = homeWorld.transform.position;
     }
 
     public void Update()
@@ -110,11 +118,6 @@ public class Player : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Vector3.Distance(transform.position, Vector3.zero) > 150.0f)
-        {
-            transform.position = Vector3.zero;
-        }
-
         currentWorlds = gameController.FindInGravityRadius(transform.position);
 
         if (currentWorlds.Count == 0)
