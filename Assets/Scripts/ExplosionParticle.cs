@@ -7,6 +7,16 @@ public class ExplosionParticle : MonoBehaviour
     private ParticleSystem smokeParticle;
 
     private List<ParticleSystem> systems;
+    private static GameObject prefab = null;
+
+    public static void Create(Vector3 p)
+    {
+        if (prefab == null)
+        {
+            prefab = (GameObject)Resources.Load("ExplosionPrefab");
+        }
+        Instantiate(prefab, p, Quaternion.Euler(0.0f, 0.0f, 0.0f));
+    }
 
 	void Awake()
     {
