@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     public float flySpeed = 0.4f;
     public float playerRadius;
 
+    public float pickUpRadius = 3.0f;
+    public float pickUpStrength = 2.0f;
+
     private float speed;
     private bool grounded;
 
@@ -160,5 +163,8 @@ public class Player : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, playerRadius);
+
+        Gizmos.color = new Color(1.0f, 1.0f, 0.5f, 1.0f);
+        Gizmos.DrawWireSphere(transform.position, pickUpRadius);
     }
 }

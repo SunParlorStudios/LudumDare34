@@ -5,15 +5,28 @@ using System.Collections;
 public class Pickup : MonoBehaviour
 {
     public World.Resources type;
+    public Player player;
+
+    private bool followPlayer;
 
     public void Awake()
     {
-
+        followPlayer = false;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
+        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius)
+        {
+            followPlayer = true;
 
+            transform.position = Vector3.Lerp(
+                transform.position, 
+                player.transform.position,
+                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.pickUpRadius)) * player.pickUpStrength, 0.022f)
+            );
+        }
     }
 
     public void OnTriggerEnter2D(Collider2D collider)
