@@ -29,8 +29,6 @@ public class Player : MonoBehaviour
 
     public Dictionary<World.Resources, int> inventory;
 
-    private ExplosionParticle explosion;
-
     private Vector3 defaultScale;
     private float defaultZ;
 
@@ -53,12 +51,11 @@ public class Player : MonoBehaviour
         defaultZ = transform.position.z;
 
         homeWorld = GameObject.Find("WorldHome");
-        explosion = GetComponent<ExplosionParticle>();
     }
 
     public void Kill()
     {
-        explosion.Spawn(transform.position);
+        ExplosionParticle.Create(transform.position);
         transform.position = homeWorld.transform.position;
     }
 
