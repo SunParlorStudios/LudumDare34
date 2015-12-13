@@ -10,6 +10,10 @@ public class CameraController : MonoBehaviour
     private Material postProcessing;
     public float imageDistortionShift = 0.00125f;
     public float imageDistortionFrequency = 0.05f;
+    public bool doBloom = true;
+    public float bloom = 0.5f;
+    public float bloomBlurDistance = 0.1f;
+    public float bloomPasses = 1.0f;
 
     public void Awake()
     {
@@ -32,6 +36,11 @@ public class CameraController : MonoBehaviour
     {
         postProcessing.SetFloat("_Shift", imageDistortionShift);
         postProcessing.SetFloat("_Frequency", imageDistortionFrequency);
+        postProcessing.SetFloat("_Bloom", 1.0f - bloom);
+        postProcessing.SetFloat("_BloomBlur", bloomBlurDistance);
+        postProcessing.SetFloat("_BloomPasses", bloomPasses);
+        postProcessing.SetFloat("_DoBloom", doBloom == true ? 1.0f : 0.0f);
+
         Graphics.Blit(source, destination, postProcessing);
     }
 }
