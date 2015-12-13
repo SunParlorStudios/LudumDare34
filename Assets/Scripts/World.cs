@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class World : MonoBehaviour
 {
-    public enum Resources
+    public enum Resources : int
     {
         Type1,
         Type2,
