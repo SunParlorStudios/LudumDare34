@@ -85,8 +85,8 @@ public class BaseController : MonoBehaviour
             {
                 for (int j = 0; j < gameController.worlds[i].transform.childCount; j++)
                 {
-                    if (gameController.worlds[i].transform.GetChild(i).name.Contains("Pickup"))
-                        Destroy(gameController.worlds[i].transform.GetChild(i).gameObject);
+                    if (gameController.worlds[i].transform.GetChild(j).name.Contains("Pickup"))
+                        Destroy(gameController.worlds[i].transform.GetChild(j).gameObject);
                 }
             }
         }
