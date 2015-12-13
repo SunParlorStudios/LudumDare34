@@ -24,12 +24,11 @@ public class Player : MonoBehaviour
     private Vector3 flyVelocity;
     private World lastWorld;
     private GameObject homeWorld;
+    private GameObject explosion;
 
     private float wobbleTimer;
 
     public Dictionary<World.Resources, int> inventory;
-
-    private ExplosionParticle explosion;
 
     private Vector3 defaultScale;
     private float defaultZ;
@@ -52,12 +51,12 @@ public class Player : MonoBehaviour
         defaultZ = transform.position.z;
 
         homeWorld = GameObject.Find("WorldHome");
-        explosion = GetComponent<ExplosionParticle>();
+        explosion = (GameObject)Resources.Load("ExplosionPrefab");
     }
 
     public void Kill()
     {
-        explosion.Spawn(transform.position);
+        Instantiate(explosion, transform.position, Quaternion.Euler(0.0f, 0.0f, 0.0f));
         transform.position = homeWorld.transform.position;
     }
 
