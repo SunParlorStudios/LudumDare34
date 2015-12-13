@@ -9,7 +9,9 @@ public class Player : MonoBehaviour
 
     public float deceleration = 0.1f;
     public float maxSpeed = 0.2f;
-    public float flySpeed = 0.4f;
+    public float flySpeed = 0.2f;
+    public float flyMovement = 1.0f;
+    public float angularSpeed = 0.1f;
     public float playerRadius;
 
     public float pickUpRadius = 3.0f;
@@ -68,6 +70,25 @@ public class Player : MonoBehaviour
 
         if (grounded == false)
         {
+            Vector3 delta = flyVelocity.normalized;
+            float angle = Mathf.Atan2(delta.y, delta.x);
+
+            float speed = 0.0f;
+
+            if (Input.GetKey(KeyCode.LeftArrow) == true)
+            {
+                speed = flyMovement;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) == true)
+            {
+                speed = -flyMovement;
+            }
+
+            float ax = Mathf.Cos(angle + speed * Time.deltaTime) * flySpeed;
+            float ay = Mathf.Sin(angle + speed * Time.deltaTime) * flySpeed;
+
+            flyVelocity = new Vector3(ax, ay, 0.0f);
+
             return;
         }
 
@@ -95,6 +116,11 @@ public class Player : MonoBehaviour
         }
 
         currentWorlds = gameController.FindInGravityRadius(transform.position);
+
+        if (currentWorlds.Count == 0)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(flyVelocity.y, flyVelocity.x) * Mathf.Rad2Deg), angularSpeed);
+        }
 
         Vector3 worldPosition;
         Vector3 position;
@@ -132,7 +158,7 @@ public class Player : MonoBehaviour
                 {
                     float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius);
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), 0.1f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed);
 
                     normal = (worldPosition - position).normalized;
 
@@ -149,7 +175,7 @@ public class Player : MonoBehaviour
                     float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius) * flyVelocity.magnitude;
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * newDistance, Mathf.Sin(angle) * newDistance);
 
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), 0.1f);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed);
                 }
             }
 
