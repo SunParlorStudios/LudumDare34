@@ -9,7 +9,10 @@ public class BaseController : MonoBehaviour
     public float smoothing;
 
     public GameObject[] buildings;
+    [Tooltip("The threshold size (size of growth of the planet) of a delivery, if met spawns a homebase object")]
     public float thresholdSize;
+
+    public float surfaceOffset;
 
     private float interpolateTime;
     private bool doInterpolate;
@@ -33,7 +36,7 @@ public class BaseController : MonoBehaviour
 
         homeWorld.OnDeliverResources += OnDeliverResources;
 
-        buildingsObj = GameObject.Find("Buildings");
+        buildingsObj = GameObject.Find("WorldHomeVisuals");
     }
 
     private void OnDeliverResources()
@@ -54,19 +57,27 @@ public class BaseController : MonoBehaviour
         endSurfaceRadius = baseSurfaceRadius + numResources * growStrengthPerResource;
         endGravityRadius = baseGravityRadius + numResources * growStrengthPerResource;
 
-        //if (endSurfaceRadius - beginSurfaceRadius > 0.0f)
-        //{
-
-        for (int i = 0; i < 360; i++)
+        if (endSurfaceRadius - beginSurfaceRadius > thresholdSize)
         {
             GameObject obj = Instantiate(buildings[(int)(Random.value * buildings.Length)]);
             obj.transform.parent = buildingsObj.transform;
 
-            float angle = i;
+            float angle = Random.Range(0, 360);
 
-            obj.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
-            obj.transform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * (endSurfaceRadius + 2.0f), Mathf.Sin(angle * Mathf.Deg2Rad) * (endSurfaceRadius + 2.0f), -5.0f);
+            obj.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+            obj.transform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), transform.position.z + 10.0f);
             obj.transform.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, angle - 90.0f));
+        }
+
+        for (int i = 0; i < buildingsObj.transform.childCount; i++)
+        {
+            Transform trans = buildingsObj.transform.GetChild(i);
+            
+            float angle = Mathf.Atan2(trans.localPosition.y, trans.localPosition.x) * Mathf.Rad2Deg;
+
+            trans.localScale = new Vector3(3.0f, 3.0f, 1.0f);
+            trans.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), -5.0f);
+            trans.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, angle - 90.0f));
         }
     }
 
