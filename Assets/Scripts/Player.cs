@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
     public Dictionary<World.Resources, int> inventory;
 
     private ParticleSystem explosionParticle;
+    private ParticleSystem smokeParticle;
+
     private Vector3 defaultScale;
     private float defaultZ;
 
@@ -52,6 +54,7 @@ public class Player : MonoBehaviour
 
         homeWorld = GameObject.Find("WorldHome");
         explosionParticle = GetComponentsInChildren<ParticleSystem>()[1];
+        smokeParticle = GetComponentsInChildren<ParticleSystem>()[2];
     }
 
     public void Kill()
@@ -59,6 +62,10 @@ public class Player : MonoBehaviour
         ParticleSystem explosion = Instantiate(explosionParticle);
         explosion.transform.position = transform.position;
         explosion.Play();
+
+        ParticleSystem smoke = Instantiate(smokeParticle);
+        smoke.transform.position = transform.position;
+        smoke.Play();
 
         transform.position = homeWorld.transform.position;
     }
