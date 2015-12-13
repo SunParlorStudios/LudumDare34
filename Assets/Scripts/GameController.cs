@@ -40,10 +40,8 @@ public class GameController : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Random.Range(0, 100) == 50)
+        if (Random.Range(0, 200) == 1)
         {
-            Debug.Log("jesis");
-
             Comet comet = ((GameObject)Instantiate(asteroidPrefab)).GetComponent<Comet>();
 
             var hitPoint = Vector3.Lerp(asteroidFocusMin.transform.position, asteroidFocusMax.transform.position, Random.Range(0.0f, 1.0f));
@@ -54,10 +52,13 @@ public class GameController : MonoBehaviour
             float angle2 = Mathf.Atan2(start.y - hitPoint.y, start.x - hitPoint.x) + 180 * Mathf.Deg2Rad;
             Vector3 end = new Vector3(Mathf.Cos(angle2) * 50.0f, Mathf.Sin(angle2) * 50.0f, 0.0f);
 
-            comet.speed = Random.Range(0.3f, 0.4f);
+            comet.speed = Random.Range(0.45f, 0.5f);
             comet.transform.position = start + player.transform.position;
             comet.start = start + player.transform.position;
             comet.end = end + player.transform.position;
+
+            float angle3 = (Mathf.Atan2(comet.start.y - comet.end.y, comet.start.x - comet.end.x) + Mathf.PI) * Mathf.Rad2Deg;
+            comet.transform.rotation = Quaternion.Euler(0, 0, angle3);
         }
     }
 

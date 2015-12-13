@@ -23,4 +23,12 @@ public class Comet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.tag == "Player")
+        {
+            collider.gameObject.GetComponent<Player>().Kill();
+        }
+    }
 }

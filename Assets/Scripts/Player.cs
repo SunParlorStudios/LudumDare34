@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
         inventory.Add(World.Resources.Type3, 0);
         inventory.Add(World.Resources.Type4, 0);
         inventory.Add(World.Resources.Type5, 0);
+        inventory.Add(World.Resources.Type6, 0);
 
         defaultScale = transform.localScale;
         defaultZ = transform.position.z;
