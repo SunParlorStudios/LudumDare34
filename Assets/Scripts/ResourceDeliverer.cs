@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class HomeWorld : MonoBehaviour
+public class ResourceDeliverer : MonoBehaviour
 {
-    public World baseWorld;
+    public BaseController baseController;
 
     public delegate void OnDeliverResourcesDelegate();
     public event OnDeliverResourcesDelegate OnDeliverResources;
@@ -17,9 +17,9 @@ public class HomeWorld : MonoBehaviour
             bool delivered = false;
 
             Dictionary<World.Resources, int> newDict = new Dictionary<World.Resources, int>();
-            foreach(KeyValuePair<World.Resources, int> entry in player.inventory)
+            foreach (KeyValuePair<World.Resources, int> entry in player.inventory)
             {
-                baseWorld.resources[entry.Key] += entry.Value;
+                baseController.resources[entry.Key] += entry.Value;
                 newDict[entry.Key] = 0;
 
                 if (entry.Value > 0)
@@ -28,7 +28,12 @@ public class HomeWorld : MonoBehaviour
             player.inventory = newDict;
 
             if (OnDeliverResources != null && delivered)
+            {
                 OnDeliverResources();
+
+
+                Debug.Log("hey faggits ayy " + Time.time);
+            }
         }
     }
 }

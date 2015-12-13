@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
         transform.position = homeWorld.transform.position;
     }
 
-    public void Update()
+    public void LateUpdate()
     {
         wobbleTimer += Time.deltaTime;
 

@@ -4,20 +4,19 @@ using System.Collections.Generic;
 public class BaseController : MonoBehaviour
 {
     public World world;
-    public HomeWorld homeWorld;
-    public float growStrengthPerResource;
-    public float smoothing;
+    public ResourceDeliverer resourceDeliverer;
+    public GameController gameController;
+    public CameraController cameraController;
+    public float growthSmoothing;
+    public float growthPerLevel;
 
     public GameObject[] buildings;
-    [Tooltip("The threshold size (size of growth of the planet) of a delivery, if met spawns a homebase object")]
-    public float thresholdSize;
+    public Dictionary<World.Resources, int> resources;
 
-    public float surfaceOffset;
+    public Player player;
 
     private float interpolateTime;
     private bool doInterpolate;
-
-    private GameObject buildingsObj;
 
     private float baseSurfaceRadius;
     private float baseGravityRadius;
@@ -25,75 +24,116 @@ public class BaseController : MonoBehaviour
     private float beginGravityRadius;
     private float endSurfaceRadius;
     private float endGravityRadius;
+    private List<World> worldsToBeSwallowed;
 
     public void Awake()
     {
-        interpolateTime = 0.0f;
-        doInterpolate = false;
+        resources = new Dictionary<World.Resources, int>();
+        resources.Add(World.Resources.Type1, 0);
+        resources.Add(World.Resources.Type2, 0);
+        resources.Add(World.Resources.Type3, 0);
+        resources.Add(World.Resources.Type4, 0);
+        resources.Add(World.Resources.Type5, 0);
+        resources.Add(World.Resources.Type6, 0);
+
+        resourceDeliverer.OnDeliverResources += OnDeliverResources;
+
+        cameraController.onFocusedWorld += CameraFocusedWorld;
 
         baseSurfaceRadius = world.surfaceRadius;
         baseGravityRadius = world.gravityRadius;
+    }
 
-        homeWorld.OnDeliverResources += OnDeliverResources;
-
-        buildingsObj = GameObject.Find("WorldHomeVisuals");
+    private void CameraFocusedWorld()
+    {
+        // Interpolate the world
+        doInterpolate = true;
+        interpolateTime = 0.0f;
     }
 
     private void OnDeliverResources()
     {
-        doInterpolate = true;
+        if (gameController.RequirementsMet(resources))
+        {
+            DoUpgrade();
+        }
+    }
+
+    public void DoUpgrade()
+    {
+        if (doInterpolate == false)
+        {
+            // Reset the resources
+            Dictionary<World.Resources, int> newResources = new Dictionary<World.Resources, int>();
+            foreach (KeyValuePair<World.Resources, int> entry in resources)
+            {
+                newResources.Add(entry.Key, 0);
+            }
+            resources = newResources;
+
+            beginSurfaceRadius = world.surfaceRadius;
+            beginGravityRadius = world.gravityRadius;
+            endSurfaceRadius = world.surfaceRadius * growthPerLevel;
+            endGravityRadius = world.gravityRadius * growthPerLevel;
+
+            worldsToBeSwallowed = gameController.FindWorldsInRadius(transform.position, endSurfaceRadius);
+
+            cameraController.state = CameraController.State.FocusWorld;
+            cameraController.offsetZ = -10 - world.surfaceRadius;
+
+            for (int i = 0; i < gameController.worlds.Count; i++)
+            {
+                for (int j = 0; j < gameController.worlds[i].transform.childCount; j++)
+                {
+                    if (gameController.worlds[i].transform.GetChild(i).name.Contains("Pickup"))
+                        Destroy(gameController.worlds[i].transform.GetChild(i).gameObject);
+                }
+            }
+        }
+    }
+
+    public void EndUpgrade()
+    {
+        doInterpolate = false;
         interpolateTime = 0.0f;
 
-        beginSurfaceRadius = world.surfaceRadius;
-        beginGravityRadius = world.gravityRadius;
+        cameraController.state = CameraController.State.Default;
+        cameraController.offsetZ = -10;
 
-        int numResources = 0;
-
-        foreach (KeyValuePair<World.Resources, int> entry in world.resources)
+        foreach (World currentWorld in worldsToBeSwallowed)
         {
-            numResources += entry.Value;
+            if (currentWorld != world)
+                gameController.DestroyWorld(currentWorld);
         }
 
-        endSurfaceRadius = baseSurfaceRadius + numResources * growStrengthPerResource;
-        endGravityRadius = baseGravityRadius + numResources * growStrengthPerResource;
-
-        if (endSurfaceRadius - beginSurfaceRadius > thresholdSize)
-        {
-            GameObject obj = Instantiate(buildings[(int)(Random.value * buildings.Length)]);
-            obj.transform.parent = buildingsObj.transform;
-
-            float angle = Random.Range(0, 360);
-
-            obj.transform.localScale = new Vector3(3.0f, 3.0f, 1.0f);
-            obj.transform.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), transform.position.z + 10.0f);
-            obj.transform.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, angle - 90.0f));
-        }
-
-        for (int i = 0; i < buildingsObj.transform.childCount; i++)
-        {
-            Transform trans = buildingsObj.transform.GetChild(i);
-            
-            float angle = Mathf.Atan2(trans.localPosition.y, trans.localPosition.x) * Mathf.Rad2Deg;
-
-            trans.localScale = new Vector3(3.0f, 3.0f, 1.0f);
-            trans.localPosition = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * ((1.0f / 5.12f) * endSurfaceRadius + surfaceOffset), -5.0f);
-            trans.localRotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, angle - 90.0f));
-        }
+        float angle = Mathf.Atan2(player.transform.position.y - world.transform.position.y, player.transform.position.x - world.transform.position.x);
+        player.transform.position = new Vector3(Mathf.Cos(angle) * world.surfaceRadius + world.transform.position.x, Mathf.Sin(angle) * world.surfaceRadius + world.transform.position.y, player.transform.position.z);
     }
 
     public void Update()
     {
-        if (doInterpolate)
+        if (doInterpolate == true)
         {
-            interpolateTime += Time.deltaTime * smoothing;
+            float angle = Mathf.Atan2(player.transform.position.y - world.transform.position.y, player.transform.position.x - world.transform.position.x);
+            player.transform.position = new Vector3(Mathf.Cos(angle) * world.surfaceRadius + player.playerRadius + world.transform.position.x, Mathf.Sin(angle) * world.surfaceRadius + player.playerRadius + world.transform.position.y, player.transform.position.z);
 
-            world.surfaceRadius = Mathf.Lerp(beginSurfaceRadius, endSurfaceRadius, EaseOutElastic(interpolateTime, 0.0f, 1.0f, 1.0f));
-            world.gravityRadius = Mathf.Lerp(beginGravityRadius, endGravityRadius, EaseOutElastic(interpolateTime, 0.0f, 1.0f, 1.0f));
+            interpolateTime += Mathf.Min(Time.deltaTime * growthSmoothing, 1.0f);
+
+            world.surfaceRadius = Mathf.LerpUnclamped(beginSurfaceRadius, endSurfaceRadius, EaseOutElastic(interpolateTime, 0.0f, 1.0f, 1.0f));
+            world.gravityRadius = Mathf.LerpUnclamped(beginGravityRadius, endGravityRadius, EaseOutElastic(interpolateTime, 0.0f, 1.0f, 1.0f));
+
+            for (int i = 0; i < worldsToBeSwallowed.Count; i++)
+            {
+                if (worldsToBeSwallowed[i] != world)
+                {
+                    worldsToBeSwallowed[i].surfaceRadius = Mathf.Lerp(worldsToBeSwallowed[i].surfaceRadius, 0.0f, Time.deltaTime * 2.0f);
+                    worldsToBeSwallowed[i].transform.position = Vector3.Lerp(worldsToBeSwallowed[i].transform.position, transform.position, Time.deltaTime * 2.0f);
+                }
+            }
 
             if (interpolateTime >= 1.0f)
             {
-                doInterpolate = false;
-                interpolateTime = 0.0f;
+                EndUpgrade();
             }
         }
     }

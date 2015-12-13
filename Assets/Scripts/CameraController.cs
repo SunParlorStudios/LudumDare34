@@ -3,10 +3,15 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
+    public enum State
+    {
+        Default,
+        FocusWorld
+    }
+
     public Transform target;
     public float smoothing;
     public float angularSpeed;
-    public Vector3 offset;
     private Material postProcessing;
     public float imageDistortionShift = 0.00125f;
     public float imageDistortionFrequency = 0.05f;
@@ -15,20 +20,50 @@ public class CameraController : MonoBehaviour
     public float bloomBlurDistance = 0.1f;
     public float bloomPasses = 1.0f;
 
+    public State state;
+    public float offsetZ;
+
+    public delegate void OnFocusedWorldDelegate();
+    public event OnFocusedWorldDelegate onFocusedWorld;
+    public bool onFocusedWorldCalled = false;
+
+    private World worldBase;
+
     public void Awake()
     {
         postProcessing = new Material(Shader.Find("Hidden/StaticShader"));
+        worldBase = GameObject.Find("WorldHome").GetComponent<World>();
+        onFocusedWorldCalled = false;
     }
 
-	public void Update ()
+    public void Update()
     {
-	    if (target != null)
-        {
-            Vector3 newPos = Vector3.Lerp(transform.position, target.position, smoothing * Time.deltaTime);
-            newPos.z = offset.z;
-            transform.position = newPos;
+        Vector3 newPos;
 
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0.0f, 0.0f, target.transform.localEulerAngles.z)), angularSpeed * Time.deltaTime);
+        switch (state)
+        {
+            case State.Default:
+                newPos = Vector3.Lerp(transform.position, target.position, smoothing * Time.deltaTime);
+                newPos.z = Mathf.Lerp(transform.position.z, offsetZ, smoothing * Time.deltaTime);
+                transform.position = newPos;
+
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0.0f, 0.0f, target.transform.localEulerAngles.z)), angularSpeed * Time.deltaTime);
+                onFocusedWorldCalled = false;
+                break;
+            case State.FocusWorld:
+                newPos = Vector3.Lerp(transform.position, worldBase.transform.position, smoothing * Time.deltaTime);
+                newPos.z = Mathf.Lerp(transform.position.z, offsetZ, Time.deltaTime);
+                transform.position = newPos;
+
+                if (Mathf.Abs(newPos.z) >= Mathf.Abs(offsetZ * 0.95f))
+                {
+                    if (!onFocusedWorldCalled)
+                    {
+                        onFocusedWorldCalled = true;
+                        onFocusedWorld();
+                    }
+                }
+                break;
         }
 	}
 
