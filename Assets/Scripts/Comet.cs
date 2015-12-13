@@ -20,6 +20,7 @@ public class Comet : MonoBehaviour
 
         if (timer >= 1.0f)
         {
+            ExplosionParticle.Create(transform.position);
             Destroy(gameObject);
         }
     }
@@ -28,6 +29,7 @@ public class Comet : MonoBehaviour
     {
         if (collider.tag == "Player")
         {
+            ExplosionParticle.Create(transform.position);
             collider.gameObject.GetComponent<Player>().Kill();
         }
     }
