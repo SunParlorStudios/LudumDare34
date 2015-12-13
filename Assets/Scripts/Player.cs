@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
 
     public Dictionary<World.Resources, int> inventory;
 
+    private ParticleSystem explosionParticle;
     private Vector3 defaultScale;
     private float defaultZ;
 
@@ -50,15 +51,26 @@ public class Player : MonoBehaviour
         defaultZ = transform.position.z;
 
         homeWorld = GameObject.Find("WorldHome");
+        explosionParticle = GetComponentsInChildren<ParticleSystem>()[1];
     }
 
     public void Kill()
     {
+        ParticleSystem explosion = Instantiate(explosionParticle);
+        explosion.transform.position = transform.position;
+        explosion.Play();
+
         transform.position = homeWorld.transform.position;
     }
 
     public void Update()
     {
+        if (Input.GetKeyUp(KeyCode.G) == true)
+        {
+            Kill();
+            return;
+        }
+
         wobbleTimer += Time.deltaTime;
 
         if (wobbleTimer > Mathf.PI * 2.0f)
@@ -109,7 +121,7 @@ public class Player : MonoBehaviour
             speed = -maxSpeed;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) == true)
+        if (Input.GetKeyDown(KeyCode.UpArrow) == true)
         {
             flyVelocity = normal * -1.0f * flySpeed;
             grounded = false;
