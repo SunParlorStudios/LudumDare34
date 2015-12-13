@@ -7,16 +7,25 @@ public class Pickup : MonoBehaviour
     public World.Resources type;
     public Player player;
 
+    private bool followPlayer;
+
     public void Awake()
     {
+        followPlayer = false;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
-        if (Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius)
+        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius)
         {
-            transform.position = Vector3.Lerp(transform.position, player.transform.position, (1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.pickUpRadius)) * player.pickUpStrength);
+            followPlayer = true;
+
+            transform.position = Vector3.Lerp(
+                transform.position, 
+                player.transform.position,
+                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.pickUpRadius)) * player.pickUpStrength, 0.022f)
+            );
         }
     }
 
