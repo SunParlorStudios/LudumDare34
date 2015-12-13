@@ -21,13 +21,15 @@ public class Player : MonoBehaviour
     private bool grounded;
 
     private Vector3 normal;
-    private Vector3 flyVelocity;
+    public Vector3 flyVelocity;
     private World lastWorld;
     private GameObject homeWorld;
 
     private float wobbleTimer;
+    private float defaultFlySpeed;
 
     public Dictionary<World.Resources, int> inventory;
+    public float ignoreGravityTimer = 0.0f;
 
     private Vector3 defaultScale;
     private float defaultZ;
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour
 
         defaultScale = transform.localScale;
         defaultZ = transform.position.z;
+        defaultFlySpeed = flySpeed;
 
         homeWorld = GameObject.Find("WorldHome");
     }
@@ -57,6 +60,11 @@ public class Player : MonoBehaviour
     {
         ExplosionParticle.Create(transform.position);
         transform.position = homeWorld.transform.position;
+    }
+
+    public void Update()
+    {
+        ignoreGravityTimer -= Time.deltaTime;
     }
 
     public void LateUpdate()
@@ -73,6 +81,7 @@ public class Player : MonoBehaviour
         {
             wobbleTimer = 0.0f;
         }
+
 
         float a = (transform.rotation.z + 90.0f) * Mathf.Deg2Rad;
         float r = Mathf.Sin(wobbleTimer) * 0.5f;
@@ -130,7 +139,7 @@ public class Player : MonoBehaviour
     {
         currentWorlds = gameController.FindInGravityRadius(transform.position);
 
-        if (currentWorlds.Count == 0)
+        if (currentWorlds.Count == 0 || ignoreGravityTimer <= 0.0f)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(flyVelocity.y, flyVelocity.x) * Mathf.Rad2Deg), angularSpeed);
         }
@@ -148,6 +157,11 @@ public class Player : MonoBehaviour
         transform.localScale = new Vector3(speed >= 0.0f ? -defaultScale.x : defaultScale.x, transform.localScale.y, transform.localScale.z);
 
         float radius;
+
+        if (ignoreGravityTimer > 0.0f)
+        {
+            return;
+        }
 
         for (int i = 0; i < currentWorlds.Count; i++)
         {
@@ -182,6 +196,7 @@ public class Player : MonoBehaviour
 
                     lastWorld = currentWorlds[i];
                     grounded = true;
+                    flySpeed = defaultFlySpeed;
                 }
                 else if (grounded == false)
                 {
