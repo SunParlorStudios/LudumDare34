@@ -29,8 +29,15 @@ public class Comet : MonoBehaviour
     {
         if (collider.tag == "Player")
         {
+            Player player = collider.gameObject.GetComponent<Player>();
+
+            if (player.dead == true)
+            {
+                return;
+            }
+
             ExplosionParticle.Create(transform.position);
-            collider.gameObject.GetComponent<Player>().Kill();
+            player.Kill();
             Destroy(gameObject);
         }
     }

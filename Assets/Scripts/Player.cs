@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public float flyMovement = 1.0f;
     public float angularSpeed = 0.1f;
     public float playerRadius;
+    public Vector3 deathPosition;
 
     public float pickUpRadius = 3.0f;
     public float pickUpStrength = 2.0f;
@@ -34,6 +35,18 @@ public class Player : MonoBehaviour
     private Vector3 defaultScale;
     private float defaultZ;
 
+    private float deathTimer = 0.0f;
+    public float maxDeathTimer = 3.0f;
+    private float flickerTimer = 0.0f;
+    private float maxFlickerTimer = 0.01f;
+    public bool dead;
+    private bool visible;
+
+    private CameraController gameCamera;
+    private GameObject visuals;
+    private SpriteRenderer visualRenderer;
+    private ParticleSystem particles;
+
     public void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
@@ -54,13 +67,57 @@ public class Player : MonoBehaviour
         defaultFlySpeed = flySpeed;
 
         homeWorld = GameObject.Find("WorldHome");
+        gameCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+
+        deathTimer = maxDeathTimer;
+
+        for (int i = 0; i < transform.childCount; ++i)
+        {
+            if (transform.GetChild(i).name != "AsteroidFocusMin" && transform.GetChild(i).name != "AsteroidFocusMax")
+            {
+                visuals = transform.GetChild(i).gameObject;
+                break;
+            }
+        }
+
+        visualRenderer = visuals.GetComponent<SpriteRenderer>();
+        particles = visuals.transform.GetChild(0).GetComponent<ParticleSystem>();
+        dead = false;
+        visible = true;
+    }
+
+    public void Hide()
+    {
+        visible = false;
+        visualRenderer.enabled = false;
+        particles.Stop();
+    }
+
+    public void Show()
+    {
+        visible = true;
+        visualRenderer.enabled = true;
+        particles.Play();
     }
 
     public void Kill()
     {
+        if (dead == true)
+        {
+            return;
+        }
+
         ExplosionParticle.Create(transform.position);
+        deathPosition = transform.position;
+        gameCamera.state = CameraController.State.PlayerKilled;
+
+        grounded = true;
         transform.position = homeWorld.transform.position;
         ResetInventory();
+
+        Hide();
+        deathTimer = 0.0f;
+        dead = true;
     }
 
     public void ResetInventory()
@@ -75,6 +132,35 @@ public class Player : MonoBehaviour
     {
         ignoreGravityTimer -= Time.deltaTime;
         ignoreGravityTimer = Mathf.Max(0.0f, ignoreGravityTimer);
+
+        if (deathTimer < maxDeathTimer)
+        {
+            deathTimer += Time.deltaTime;
+            
+            if (flickerTimer < maxFlickerTimer)
+            {
+                flickerTimer += Time.deltaTime;
+            }
+            else
+            {
+                if (visible == true)
+                {
+                    Hide();
+                }
+                else
+                {
+                    Show();
+                }
+
+                flickerTimer = 0.0f;
+            }
+        }
+        else if (dead == true)
+        {
+            dead = false;
+            Show();
+        }
+
         Move();
     }
 
@@ -96,15 +182,7 @@ public class Player : MonoBehaviour
 
         float a = (transform.rotation.z + 90.0f) * Mathf.Deg2Rad;
         float r = Mathf.Sin(wobbleTimer) * 0.5f;
-        Vector3 p;
-        for (int i = 0; i < transform.childCount; ++i)
-        {
-            if (transform.GetChild(i).name != "AsteroidFocusMin" && transform.GetChild(i).name != "AsteroidFocusMax")
-            {
-                p = transform.GetChild(i).transform.localPosition;
-                transform.GetChild(i).transform.localPosition = new Vector3(Mathf.Cos(a) * r, Mathf.Sin(a) * r, p.z);
-            }
-        }
+        visuals.transform.localPosition = new Vector3(Mathf.Cos(a) * r, Mathf.Sin(a) * r, visuals.transform.localPosition.z);
 
         if (grounded == false)
         {
