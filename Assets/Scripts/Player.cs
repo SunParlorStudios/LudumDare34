@@ -47,6 +47,8 @@ public class Player : MonoBehaviour
     private SpriteRenderer visualRenderer;
     private ParticleSystem particles;
 
+    private List<Upgrade> upgrades;
+
     public void Awake()
     {
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
