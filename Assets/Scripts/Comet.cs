@@ -31,7 +31,7 @@ public class Comet : MonoBehaviour
         {
             Player player = collider.gameObject.GetComponent<Player>();
 
-            if (player.dead == true)
+            if (player.dead == true || player.invincible == true)
             {
                 return;
             }

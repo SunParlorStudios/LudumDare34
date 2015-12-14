@@ -40,9 +40,10 @@ public class Player : MonoBehaviour
     private float flickerTimer = 0.0f;
     private float maxFlickerTimer = 0.01f;
     public bool dead;
+    public bool invincible;
     private bool visible;
 
-    private CameraController gameCamera;
+    public CameraController gameCamera;
     private GameObject visuals;
     private SpriteRenderer visualRenderer;
     private ParticleSystem particles;
@@ -84,6 +85,8 @@ public class Player : MonoBehaviour
 
         visualRenderer = visuals.GetComponent<SpriteRenderer>();
         particles = visuals.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+        invincible = false;
         dead = false;
         visible = true;
 
@@ -106,7 +109,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
-        if (dead == true)
+        if (dead == true || invincible == true)
         {
             return;
         }
@@ -313,6 +316,11 @@ public class Player : MonoBehaviour
 
                     if (lastWorld != currentWorlds[i])
                     {
+                        if (gameCamera.state == CameraController.State.InCannon)
+                        {
+                            gameCamera.state = CameraController.State.Default;
+                        }
+
                         grounded = true;
                         speed *= -1.0f;
                         lastWorld = currentWorlds[i];
