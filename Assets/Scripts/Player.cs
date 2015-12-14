@@ -86,6 +86,8 @@ public class Player : MonoBehaviour
         particles = visuals.transform.GetChild(0).GetComponent<ParticleSystem>();
         dead = false;
         visible = true;
+
+        upgrades = new List<Upgrade>();
     }
 
     public void Hide()
@@ -132,6 +134,11 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
+        for (int i = 0; i < upgrades.Count; ++i)
+        {
+            upgrades[i].Execute();
+        }
+
         ignoreGravityTimer -= Time.deltaTime;
         ignoreGravityTimer = Mathf.Max(0.0f, ignoreGravityTimer);
 
