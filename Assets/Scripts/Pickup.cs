@@ -19,31 +19,65 @@ public class Pickup : MonoBehaviour
 
     public void Update()
     {
-        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.GetPickupRadius() && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
+        if (world != null)
         {
-            followPlayer = true;
+            if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.GetPickupRadius() && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
+            {
+                followPlayer = true;
 
-            transform.position = Vector3.Lerp(
-                transform.position, 
-                player.transform.position,
-                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.GetPickupRadius())) * player.pickUpStrength, 0.022f * Time.deltaTime * 100.0f)
-            );
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    player.transform.position,
+                    Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.GetPickupRadius())) * player.pickUpStrength, 0.022f * Time.deltaTime * 100.0f)
+                );
+            }
+        }
+        else
+        {
+            if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.GetPickupRadius())
+            {
+                followPlayer = true;
+
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    player.transform.position,
+                    Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.GetPickupRadius())) * player.pickUpStrength, 0.022f * Time.deltaTime * 100.0f)
+                );
+            }
         }
     }
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Player" && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
+        if (world != null)
         {
-            collider.gameObject.GetComponent<Player>().inventory[type]++;
-
-            if (GameController.instance.pickupDoubleUnlocked == true)
+            if (collider.gameObject.tag == "Player" && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
             {
                 collider.gameObject.GetComponent<Player>().inventory[type]++;
-            }
 
-            Destroy(gameObject);
-            SoundController.instance.Play(Random.Range(2, 3), false);
+                if (GameController.instance.pickupDoubleUnlocked == true)
+                {
+                    collider.gameObject.GetComponent<Player>().inventory[type]++;
+                }
+
+                Destroy(gameObject);
+                SoundController.instance.Play(Random.Range(2, 3), false);
+            }
+        }
+        else
+        {
+            if (collider.gameObject.tag == "Player")
+            {
+                collider.gameObject.GetComponent<Player>().inventory[type]++;
+
+                if (GameController.instance.pickupDoubleUnlocked == true)
+                {
+                    collider.gameObject.GetComponent<Player>().inventory[type]++;
+                }
+
+                Destroy(gameObject);
+                SoundController.instance.Play(Random.Range(2, 3), false);
+            }
         }
     }
 }

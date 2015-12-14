@@ -29,8 +29,13 @@ public class BaseController : MonoBehaviour
     public float resourceTimer = 60.0f;
     public float resourceTimerMax = 60.0f;
 
+    public static BaseController instance;
+
     public void Awake()
     {
+        instance = this;
+
+
         resources = new Dictionary<World.Resources, int>();
         resources.Add(World.Resources.Type1, 0);
         resources.Add(World.Resources.Type2, 0);

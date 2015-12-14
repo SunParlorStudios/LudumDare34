@@ -201,6 +201,9 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
+        if (delivering == true)
+            return;
+
         for (int i = 0; i < upgrades.Count; ++i)
         {
             upgrades[i].Execute();
@@ -250,6 +253,9 @@ public class Player : MonoBehaviour
 
     public void LateUpdate()
     {
+        if (delivering == true)
+            return;
+
         wobbleTimer += Time.deltaTime;
 
         if (wobbleTimer > Mathf.PI * 2.0f)
@@ -316,6 +322,9 @@ public class Player : MonoBehaviour
 
     public void Jump()
     {
+        if (delivering == true)
+            return;
+
         flyVelocity = normal * -1.0f * flySpeed;
         grounded = false;
     }
