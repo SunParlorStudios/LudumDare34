@@ -18,8 +18,6 @@ public class Player : MonoBehaviour
     public float pickUpRadius = 3.0f;
     public float pickUpStrength = 2.0f;
 
-    private float lastDistance;
-
     private float speed;
     public bool grounded;
 
@@ -334,16 +332,15 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < currentWorlds.Count; i++)
         {
-            if (grounded == false && lastWorld == currentWorlds[i])
+            worldPosition = currentWorlds[i].transform.position;
+            position = transform.position;
+            float distance = Vector3.Distance(position, worldPosition);
+
+            if (grounded == false && lastWorld == currentWorlds[i] && distance > lastWorld.surfaceRadius + playerRadius)
             {
                 continue;
             }
-
-            worldPosition = currentWorlds[i].transform.position;
-            position = transform.position;
-
-            float distance = Vector3.Distance(position, worldPosition);
-
+            
             if (distance < currentWorlds[i].gravityRadius)
             {
                 Vector3 newPosition = Vector3.MoveTowards(position, worldPosition, currentWorlds[i].gravityStrength * 100.0f * Time.deltaTime * (1.0f - distance / currentWorlds[i].gravityRadius));
@@ -364,7 +361,7 @@ public class Player : MonoBehaviour
                         SoundController.instance.Play(5, false, true);
                     }
 
-                    if (lastWorld != currentWorlds[i] && Mathf.Abs(lastDistance - newDistance) > 0.1f)
+                    if (lastWorld != currentWorlds[i])
                     {
                         if (gameCamera.state == CameraController.State.InCannon)
                         {
@@ -383,7 +380,6 @@ public class Player : MonoBehaviour
                     }
 
                     flySpeed = defaultFlySpeed;
-                    lastDistance = newDistance;
                 }
                 else if (grounded == false)
                 {
