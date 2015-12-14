@@ -108,6 +108,7 @@ public class BaseController : MonoBehaviour
 
         float angle = Mathf.Atan2(player.transform.position.y - world.transform.position.y, player.transform.position.x - world.transform.position.x);
         player.transform.position = new Vector3(Mathf.Cos(angle) * world.surfaceRadius + world.transform.position.x, Mathf.Sin(angle) * world.surfaceRadius + world.transform.position.y, player.transform.position.z);
+        player.invincible = false;
     }
 
     public void Update()
@@ -116,7 +117,7 @@ public class BaseController : MonoBehaviour
         {
             float angle = Mathf.Atan2(player.transform.position.y - world.transform.position.y, player.transform.position.x - world.transform.position.x);
             player.transform.position = new Vector3(Mathf.Cos(angle) * world.surfaceRadius + player.playerRadius + world.transform.position.x, Mathf.Sin(angle) * world.surfaceRadius + player.playerRadius + world.transform.position.y, player.transform.position.z);
-
+            player.invincible = true;
             interpolateTime += Mathf.Min(Time.deltaTime * growthSmoothing, 1.0f);
 
             world.surfaceRadius = Mathf.LerpUnclamped(beginSurfaceRadius, endSurfaceRadius, EaseOutElastic(interpolateTime, 0.0f, 1.0f, 1.0f));

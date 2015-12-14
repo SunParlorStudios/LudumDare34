@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     private float flickerTimer = 0.0f;
     private float maxFlickerTimer = 0.01f;
     public bool dead;
+    public bool invincible;
     private bool visible;
 
     public CameraController gameCamera;
@@ -84,6 +85,8 @@ public class Player : MonoBehaviour
 
         visualRenderer = visuals.GetComponent<SpriteRenderer>();
         particles = visuals.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+        invincible = false;
         dead = false;
         visible = true;
 
@@ -106,7 +109,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
-        if (dead == true)
+        if (dead == true || invincible == true)
         {
             return;
         }

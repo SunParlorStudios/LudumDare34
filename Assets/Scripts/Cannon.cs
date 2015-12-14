@@ -19,7 +19,7 @@ public class Cannon : MonoBehaviour
         if (player != null)
         {
             player.Hide();
-            player.dead = true;
+            player.invincible = true;
             player.transform.position = transform.position;
         }
 	}
@@ -31,7 +31,7 @@ public class Cannon : MonoBehaviour
         ExplosionParticle.Create(transform.position);
 
         player.grounded = false;
-        player.dead = false;
+        player.invincible = false;
         player.flyVelocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
         player.flySpeed = force;
         player.ignoreGravityTimer = 0.2f;
