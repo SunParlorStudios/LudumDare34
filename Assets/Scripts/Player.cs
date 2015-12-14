@@ -74,6 +74,8 @@ public class Player : MonoBehaviour
     public void Update()
     {
         ignoreGravityTimer -= Time.deltaTime;
+        ignoreGravityTimer = Mathf.Max(0.0f, ignoreGravityTimer);
+        Move();
     }
 
     public void LateUpdate()
@@ -144,25 +146,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void FixedUpdate()
+    public void Move()
     {
         currentWorlds = gameController.FindInGravityRadius(transform.position);
 
         if (currentWorlds.Count == 0 || ignoreGravityTimer <= 0.0f)
         {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(flyVelocity.y, flyVelocity.x) * Mathf.Rad2Deg), angularSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0.0f, 0.0f, Mathf.Atan2(flyVelocity.y, flyVelocity.x) * Mathf.Rad2Deg), angularSpeed * Time.deltaTime);
         }
 
         Vector3 worldPosition;
         Vector3 position;
-        
+
         if (grounded == true)
         {
-            speed = Mathf.Clamp(Mathf.Lerp(speed, 0.0f, deceleration), -maxSpeed, maxSpeed);
+            speed = Mathf.Clamp(Mathf.Lerp(speed, 0.0f, deceleration * Time.deltaTime), -maxSpeed, maxSpeed);
             flyVelocity = Vector3.zero;
         }
 
-        transform.position += flyVelocity;
+        transform.position += flyVelocity * Time.deltaTime;
         transform.localScale = new Vector3(speed >= 0.0f ? -defaultScale.x : defaultScale.x, transform.localScale.y, transform.localScale.z);
 
         float radius;
@@ -186,15 +188,15 @@ public class Player : MonoBehaviour
 
             if (distance < currentWorlds[i].gravityRadius)
             {
-                Vector3 newPosition = Vector3.MoveTowards(position, worldPosition, currentWorlds[i].gravityStrength * (1.0f - distance / currentWorlds[i].gravityRadius));
+                Vector3 newPosition = Vector3.MoveTowards(position, worldPosition, (currentWorlds[i].gravityStrength * 50.0f * Time.deltaTime) * (1.0f - distance / currentWorlds[i].gravityRadius));
                 float newDistance = Vector3.Distance(newPosition, worldPosition);
 
                 radius = currentWorlds[i].surfaceRadius + playerRadius;
                 if (newDistance < radius)
                 {
-                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius);
+                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + (speed * Time.deltaTime) * (1.0f / radius);
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed * Time.deltaTime);
 
                     normal = (worldPosition - position).normalized;
 
@@ -209,10 +211,10 @@ public class Player : MonoBehaviour
                 }
                 else if (grounded == false)
                 {
-                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + speed * (1.0f / radius) * flyVelocity.magnitude;
+                    float angle = Mathf.Atan2(position.y - worldPosition.y, position.x - worldPosition.x) + (speed * Time.deltaTime) * (1.0f / radius) * flyVelocity.magnitude * Time.deltaTime;
                     transform.position = worldPosition + new Vector3(Mathf.Cos(angle) * newDistance, Mathf.Sin(angle) * newDistance);
 
-                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed * Time.deltaTime);
                 }
             }
 
