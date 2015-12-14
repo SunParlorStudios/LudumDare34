@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     public float pickUpRadius = 3.0f;
     public float pickUpStrength = 2.0f;
 
+    private float lastDistance;
+
     private float speed;
     public bool grounded;
 
@@ -214,6 +216,14 @@ public class Player : MonoBehaviour
         }
 
         Move();
+
+        Transform shield = transform.FindChild("CannonShield");
+        if (shield.gameObject.activeSelf == true)
+        {
+            shield.gameObject.GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 1.0f, 1.0f);
+
+            shield.localScale = new Vector3(6.75f + Mathf.Sin(Time.time * 5.0f) * 0.5f, 6.75f + Mathf.Sin(Time.time * 5.0f) * 0.5f, 7.0f);
+        }
     }
 
     public void LateUpdate()
@@ -354,11 +364,17 @@ public class Player : MonoBehaviour
                         SoundController.instance.Play(5, false, true);
                     }
 
-                    if (lastWorld != currentWorlds[i])
+                    if (lastWorld != currentWorlds[i] && Mathf.Abs(lastDistance - newDistance) > 0.1f)
                     {
                         if (gameCamera.state == CameraController.State.InCannon)
                         {
                             gameCamera.state = CameraController.State.Default;
+                        }
+
+                        if (gameController.cannonShieldUnlocked == true)
+                        {
+                            transform.FindChild("CannonShield").gameObject.SetActive(false);
+                            invincible = false;
                         }
 
                         grounded = true;
@@ -367,6 +383,7 @@ public class Player : MonoBehaviour
                     }
 
                     flySpeed = defaultFlySpeed;
+                    lastDistance = newDistance;
                 }
                 else if (grounded == false)
                 {

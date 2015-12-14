@@ -82,6 +82,12 @@ public class Cannon : MonoBehaviour
             player.ignoreGravityTimer = 0.2f;
             player.Show();
             player.gameCamera.state = CameraController.State.InCannon;
+
+            if (GameController.instance.cannonShieldUnlocked == true)
+            {
+                player.transform.FindChild("CannonShield").gameObject.SetActive(true);
+                player.invincible = true;
+            }
             player = null;
         }
     }

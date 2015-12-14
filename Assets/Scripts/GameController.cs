@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
     public bool[] worldTypesUnlocked;
     public bool cannonRotationUnlocked;
     public bool cannonBoosterUnlocked;
+    public bool cannonShieldUnlocked;
     public bool pickupRangeIncreaseUnlocked;
     public bool pickupDoubleUnlocked;
     public bool orbitSpeedIncreased;
@@ -58,6 +59,7 @@ public class GameController : MonoBehaviour
 
         cannonRotationUnlocked = false;
         cannonBoosterUnlocked = false;
+        cannonShieldUnlocked = false;
         pickupRangeIncreaseUnlocked = false;
         pickupDoubleUnlocked = false;
         orbitSpeedIncreased = false;
