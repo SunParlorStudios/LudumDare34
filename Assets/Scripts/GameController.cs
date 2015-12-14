@@ -23,6 +23,10 @@ public class GameController : MonoBehaviour
     public Player player;
     public Transform asteroidFocusMin;
     public Transform asteroidFocusMax;
+    public float cometSpawnRate = 300.0f;
+
+    public delegate void OnCometCreatedDelegate(Comet comet);
+    public event OnCometCreatedDelegate OnCometCreated;
 
     public void Awake()
     {
@@ -40,7 +44,7 @@ public class GameController : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Random.Range(0, 200) == 1)
+        if (Random.Range(0, (int)cometSpawnRate) == 1)
         {
             Comet comet = ((GameObject)Instantiate(asteroidPrefab)).GetComponent<Comet>();
 
@@ -59,6 +63,9 @@ public class GameController : MonoBehaviour
 
             float angle3 = (Mathf.Atan2(comet.start.y - comet.end.y, comet.start.x - comet.end.x) + Mathf.PI) * Mathf.Rad2Deg;
             comet.transform.rotation = Quaternion.Euler(0, 0, angle3);
+
+            if (OnCometCreated != null)
+                OnCometCreated(comet);
         }
     }
 

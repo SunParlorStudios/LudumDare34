@@ -8,6 +8,8 @@ public class UIHandler : MonoBehaviour
     public GameController gameController;
     public BaseController baseController;
 
+    public GameObject dangerIndicatorPrefab;
+
     private GameObject[] baseResources;
     private Text[] baseResourceTexts;
 
@@ -55,9 +57,21 @@ public class UIHandler : MonoBehaviour
                 homeIndicatorArrow = child;
             }
         }
+
+        gameController.OnCometCreated += OnCometCreated;
 	}
 
-	void Update()
+    private void OnCometCreated(Comet comet)
+    {
+        GameObject dangerIndicator = Instantiate(dangerIndicatorPrefab);
+        dangerIndicator.transform.SetParent(transform, false);
+
+        dangerIndicator.GetComponent<DangerIndicator>().danger = comet.transform;
+        dangerIndicator.GetComponent<DangerIndicator>().player = player;
+        dangerIndicator.GetComponent<DangerIndicator>().camera = camera;
+    }
+
+    void Update()
     {
         int val;
         int required;
