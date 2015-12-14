@@ -97,7 +97,7 @@ public class Cannon : MonoBehaviour
     {
         if (collider.tag == "Player")
         {
-            if (GameController.instance.cannonRotationUnlocked || true)
+            if (GameController.instance.cannonRotationUnlocked == true)
             {
                 state = State.Rotating;
                 player = collider.gameObject.GetComponent<Player>();

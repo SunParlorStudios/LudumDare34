@@ -224,12 +224,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow) == true)
         {
-            speed = maxSpeed;
+            speed = maxSpeed * (gameController.orbitSpeedIncreased == true ? 2.0f : 1.0f);
             movePressed = true;
         }
         else if (Input.GetKey(KeyCode.RightArrow) == true)
         {
-            speed = -maxSpeed;
+            speed = -maxSpeed * (gameController.orbitSpeedIncreased == true ? 2.0f : 1.0f);
             movePressed = true;
         }
 
@@ -268,7 +268,7 @@ public class Player : MonoBehaviour
 
         if (grounded == true)
         {
-            speed = Mathf.Clamp(Mathf.Lerp(speed, 0.0f, deceleration * Time.deltaTime), -maxSpeed, maxSpeed);
+            speed = Mathf.Clamp(Mathf.Lerp(speed, 0.0f, deceleration * Time.deltaTime), -maxSpeed * (gameController.orbitSpeedIncreased == true ? 2.0f : 1.0f), maxSpeed * (gameController.orbitSpeedIncreased == true ? 2.0f : 1.0f));
             flyVelocity = Vector3.zero;
         }
 
