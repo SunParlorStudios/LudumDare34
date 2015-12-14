@@ -36,6 +36,8 @@ public class Comet : MonoBehaviour
                 return;
             }
 
+            SoundController.instance.Play(7);
+
             ExplosionParticle.Create(transform.position);
             player.Kill();
             Destroy(gameObject);

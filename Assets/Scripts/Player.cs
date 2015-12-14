@@ -220,13 +220,26 @@ public class Player : MonoBehaviour
             return;
         }
 
+        bool movePressed = false;
+
         if (Input.GetKey(KeyCode.LeftArrow) == true)
         {
             speed = maxSpeed;
+            movePressed = true;
         }
         else if (Input.GetKey(KeyCode.RightArrow) == true)
         {
             speed = -maxSpeed;
+            movePressed = true;
+        }
+
+        if (movePressed)
+        {
+            SoundController.instance.Play(4, false);
+        }
+        else
+        {
+            SoundController.instance.Pause(4);
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow) == true)
@@ -298,6 +311,7 @@ public class Player : MonoBehaviour
                     if (gameController.worldTypesUnlocked[(int)currentWorlds[i].type] == false)
                     {
                         Jump();
+                        SoundController.instance.Play(5, false, true);
                     }
 
                     if (lastWorld != currentWorlds[i])
