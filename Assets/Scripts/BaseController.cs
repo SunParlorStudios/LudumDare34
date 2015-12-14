@@ -26,6 +26,9 @@ public class BaseController : MonoBehaviour
     private float endGravityRadius;
     private List<World> worldsToBeSwallowed;
 
+    public float resourceTimer = 60.0f;
+    public float resourceTimerMax = 60.0f;
+
     public void Awake()
     {
         resources = new Dictionary<World.Resources, int>();
@@ -53,6 +56,8 @@ public class BaseController : MonoBehaviour
 
     private void OnDeliverResources()
     {
+        resourceTimer = resourceTimerMax;
+
         if (gameController.RequirementsMet(resources))
         {
             DoUpgrade();
@@ -136,6 +141,12 @@ public class BaseController : MonoBehaviour
             {
                 EndUpgrade();
             }
+        }
+        else
+        {
+            resourceTimer -= Time.deltaTime;
+
+            transform.FindChild("WorldHomeVisualsDestroyed").GetComponent<SpriteRenderer>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f - resourceTimer / resourceTimerMax);
         }
     }
 
