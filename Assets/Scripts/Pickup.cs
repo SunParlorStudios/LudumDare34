@@ -19,14 +19,14 @@ public class Pickup : MonoBehaviour
 
     public void Update()
     {
-        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
+        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.GetPickupRadius() && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
         {
             followPlayer = true;
 
             transform.position = Vector3.Lerp(
                 transform.position, 
                 player.transform.position,
-                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.pickUpRadius)) * player.pickUpStrength, 0.022f * Time.deltaTime * 100.0f)
+                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.GetPickupRadius())) * player.pickUpStrength, 0.022f * Time.deltaTime * 100.0f)
             );
         }
     }
@@ -36,6 +36,12 @@ public class Pickup : MonoBehaviour
         if (collider.gameObject.tag == "Player" && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
         {
             collider.gameObject.GetComponent<Player>().inventory[type]++;
+
+            if (GameController.instance.pickupDoubleUnlocked == true)
+            {
+                collider.gameObject.GetComponent<Player>().inventory[type]++;
+            }
+
             Destroy(gameObject);
             SoundController.instance.Play(Random.Range(2, 3), false);
         }
