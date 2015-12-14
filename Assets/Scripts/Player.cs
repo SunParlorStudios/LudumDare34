@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     public bool dead;
     private bool visible;
 
-    private CameraController gameCamera;
+    public CameraController gameCamera;
     private GameObject visuals;
     private SpriteRenderer visualRenderer;
     private ParticleSystem particles;
@@ -299,6 +299,11 @@ public class Player : MonoBehaviour
 
                     if (lastWorld != currentWorlds[i])
                     {
+                        if (gameCamera.state == CameraController.State.InCannon)
+                        {
+                            gameCamera.state = CameraController.State.Default;
+                        }
+
                         grounded = true;
                         speed *= -1.0f;
                         lastWorld = currentWorlds[i];
