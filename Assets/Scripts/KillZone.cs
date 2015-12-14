@@ -10,6 +10,9 @@ public class KillZone : MonoBehaviour
             return;
         }
 
+        other.GetComponent<Player>().invincible = false;
+        other.GetComponent<Player>().delivering = false;
+        other.transform.FindChild("CannonShield").gameObject.SetActive(false);
         other.GetComponent<Player>().Kill();
     }
 }

@@ -30,6 +30,7 @@ public class ResourceDeliverer : MonoBehaviour
 
             if (OnDeliverResources != null && delivered)
             {
+                GameController.instance.OnDeliverResources();
                 OnDeliverResources();
             }
         }

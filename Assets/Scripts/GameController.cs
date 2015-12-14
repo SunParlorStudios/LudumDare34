@@ -83,6 +83,16 @@ public class GameController : MonoBehaviour
         DoNextMissionText();
     }
     
+    public void OnDeliverResources()
+    {
+        GameObject helpText = GameObject.Find("HelpText");
+
+        if (helpText != null)
+        {
+            helpText.SetActive(false);
+        }
+    }
+
     public void Update()
     {
         if (runTextTimer == true)

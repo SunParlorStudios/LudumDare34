@@ -392,7 +392,7 @@ public class Player : MonoBehaviour
                             gameCamera.state = CameraController.State.Default;
                         }
 
-                        if (gameController.cannonShieldUnlocked == false)
+                        if (gameController.cannonShieldUnlocked == true)
                         {
                             transform.FindChild("CannonShield").gameObject.SetActive(false);
                             invincible = false;
