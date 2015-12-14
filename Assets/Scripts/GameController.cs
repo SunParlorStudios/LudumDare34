@@ -25,8 +25,12 @@ public class GameController : MonoBehaviour
     public Transform asteroidFocusMax;
     public float cometSpawnRate = 300.0f;
 
+    public bool[] worldTypesUnlocked;
+
     public delegate void OnCometCreatedDelegate(Comet comet);
     public event OnCometCreatedDelegate OnCometCreated;
+
+    public static GameController instance;
 
     public void Awake()
     {
@@ -40,6 +44,14 @@ public class GameController : MonoBehaviour
 
         asteroidFocusMin = GameObject.Find("AsteroidFocusMin").transform;
         asteroidFocusMax = GameObject.Find("AsteroidFocusMax").transform;
+
+        worldTypesUnlocked = new bool[4];
+        worldTypesUnlocked[(int)WorldTypes.Default] = true;
+        worldTypesUnlocked[(int)WorldTypes.Electric] = false;
+        worldTypesUnlocked[(int)WorldTypes.Toxic] = false;
+        worldTypesUnlocked[(int)WorldTypes.Fire] = false;
+
+        instance = this;
     }
 
     public void FixedUpdate()

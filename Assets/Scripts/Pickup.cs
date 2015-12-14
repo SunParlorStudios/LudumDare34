@@ -7,6 +7,8 @@ public class Pickup : MonoBehaviour
     public World.Resources type;
     public Player player;
 
+    public World world;
+
     private bool followPlayer;
 
     public void Awake()
@@ -31,7 +33,7 @@ public class Pickup : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.gameObject.tag == "Player")
+        if (collider.gameObject.tag == "Player" && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
         {
             collider.gameObject.GetComponent<Player>().inventory[type]++;
             Destroy(gameObject);

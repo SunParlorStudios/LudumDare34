@@ -221,9 +221,14 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.UpArrow) == true)
         {
-            flyVelocity = normal * -1.0f * flySpeed;
-            grounded = false;
+            Jump();
         }
+    }
+
+    public void Jump()
+    {
+        flyVelocity = normal * -1.0f * flySpeed;
+        grounded = false;
     }
 
     public void Move()
@@ -279,6 +284,11 @@ public class Player : MonoBehaviour
                     transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0, 0, angle * Mathf.Rad2Deg - 90.0f)), angularSpeed * Time.deltaTime);
 
                     normal = (worldPosition - position).normalized;
+                    
+                    if (gameController.worldTypesUnlocked[(int)currentWorlds[i].type] == false)
+                    {
+                        Jump();
+                    }
 
                     if (lastWorld != currentWorlds[i])
                     {
