@@ -17,6 +17,7 @@ public class UIHandler : MonoBehaviour
     private Text[] inventoryResourceTexts;
 
     private GameObject homeIndicatorArrow;
+    private GameObject upgradeWindow;
 
     public Camera camera;
 
@@ -56,6 +57,10 @@ public class UIHandler : MonoBehaviour
             {
                 homeIndicatorArrow = child;
             }
+            else if (child.name == "UpgradeCanvas")
+            {
+                upgradeWindow = child.transform.GetChild(0).gameObject;
+            }
         }
 
         gameController.OnCometCreated += OnCometCreated;
@@ -66,13 +71,21 @@ public class UIHandler : MonoBehaviour
         GameObject dangerIndicator = Instantiate(dangerIndicatorPrefab);
         dangerIndicator.transform.SetParent(transform, false);
 
-        dangerIndicator.GetComponent<DangerIndicator>().danger = comet.transform;
-        dangerIndicator.GetComponent<DangerIndicator>().player = player;
-        dangerIndicator.GetComponent<DangerIndicator>().camera = camera;
+        DangerIndicator indicator = dangerIndicator.GetComponent<DangerIndicator>();
+
+        indicator.danger = comet.transform;
+        indicator.danger.position = Vector3.Scale(indicator.danger.position, new Vector3(1.0f, 1.0f, 0.0f));
+        indicator.player = player;
+        indicator.camera = camera;
     }
 
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.O) == true)
+        {
+            upgradeWindow.SetActive(!upgradeWindow.activeSelf);
+        }
+
         int val;
         int required;
 
