@@ -64,6 +64,7 @@ public class UIHandler : MonoBehaviour
         }
 
         gameController.OnCometCreated += OnCometCreated;
+        upgradeWindow.SetActive(false);
 	}
 
     private void OnCometCreated(Comet comet)

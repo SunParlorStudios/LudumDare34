@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
     private ParticleSystem particles;
 
     private List<Upgrade> upgrades;
+    private bool[] hasUpgrade;
 
     public void Awake()
     {
@@ -91,6 +92,45 @@ public class Player : MonoBehaviour
         visible = true;
 
         upgrades = new List<Upgrade>();
+        hasUpgrade = new bool[9];
+
+        for (int i = 0; i < 9; ++i)
+        {
+            hasUpgrade[i] = false;
+        }
+    }
+
+    public void AddUpgrade(int id)
+    {
+        if (hasUpgrade[id] == true)
+        {
+            return;
+        }
+
+        hasUpgrade[id] = true;
+
+        Upgrade upgrade = null;
+        switch (id)
+        {
+            case 0:
+                upgrade = PlanetUnlock.Create(WorldTypes.Fire);
+                break;
+            case 1:
+                upgrade = PlanetUnlock.Create(WorldTypes.Electric);
+                break;
+            case 2:
+                upgrade = PlanetUnlock.Create(WorldTypes.Toxic);
+                break;
+            default:
+                upgrade = PlanetUnlock.Create(WorldTypes.Fire);
+                break;
+        }
+        upgrades.Add(upgrade);
+    }
+
+    public bool HasUpgrade(int id)
+    {
+        return hasUpgrade[id];
     }
 
     public void Hide()
