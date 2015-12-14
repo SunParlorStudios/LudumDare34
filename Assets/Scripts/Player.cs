@@ -399,10 +399,10 @@ public class Player : MonoBehaviour
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, GetPickupRadius());
+        Gizmos.DrawWireSphere(transform.position, playerRadius);
 
         Gizmos.color = new Color(1.0f, 1.0f, 0.5f, 1.0f);
-        Gizmos.DrawWireSphere(transform.position, GetPickupRadius());
+        Gizmos.DrawWireSphere(transform.position, pickUpRadius);
     }
 
     public float GetPickupRadius()
