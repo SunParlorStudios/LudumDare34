@@ -69,6 +69,7 @@ public class CameraController : MonoBehaviour
 
     public void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
+#if !UNITY_WEBGL
         postProcessing.SetFloat("_Shift", imageDistortionShift);
         postProcessing.SetFloat("_Frequency", imageDistortionFrequency);
         postProcessing.SetFloat("_Bloom", 1.0f - bloom);
@@ -77,5 +78,6 @@ public class CameraController : MonoBehaviour
         postProcessing.SetFloat("_DoBloom", doBloom == true ? 1.0f : 0.0f);
 
         Graphics.Blit(source, destination, postProcessing);
+#endif
     }
 }
