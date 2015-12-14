@@ -70,6 +70,7 @@ public class BaseController : MonoBehaviour
         player.invincible = true;
         player.delivering = true;
         gameController.currentLevel++;
+        gameController.DoNextMissionText();
 
         if (doInterpolate == false)
         {

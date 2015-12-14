@@ -36,6 +36,12 @@ public class GameController : MonoBehaviour
     public delegate void OnCometCreatedDelegate(Comet comet);
     public event OnCometCreatedDelegate OnCometCreated;
 
+    public bool runTextTimer;
+    public float hudTextTimer;
+    public int currentHudTextId;
+    public GameObject[] missionTexts;
+    public GameObject helpText;
+
     public static GameController instance;
 
     public void Awake()
@@ -65,6 +71,47 @@ public class GameController : MonoBehaviour
         orbitSpeedIncreased = false;
 
         instance = this;
+
+        missionTexts = new GameObject[10];
+        for (int i = 0; i < 10; i++)
+        {
+            missionTexts[i] = GameObject.Find("Mission" + (i + 1) + "Title");
+            missionTexts[i].SetActive(false);
+        }
+
+        currentHudTextId = -1;
+        DoNextMissionText();
+    }
+    
+    public void Update()
+    {
+        if (runTextTimer == true)
+        {
+            hudTextTimer += Time.deltaTime;
+
+            if (hudTextTimer >= 3.0f)
+            {
+                missionTexts[currentHudTextId].GetComponent<UnityEngine.UI.Image>().color = new Color(1.0f, 1.0f, 1.0f, Mathf.Lerp(0.0f, 1.0f, 1.0f - (hudTextTimer - 3.0f)));
+            }
+
+            if (hudTextTimer >= 4.0f)
+            {
+                runTextTimer = false;
+                hudTextTimer = 0.0f;
+                missionTexts[currentHudTextId].SetActive(false);
+            }
+        }
+    }
+
+    public void DoNextMissionText()
+    {
+        if (currentHudTextId >= 0)
+            missionTexts[currentHudTextId].SetActive(false);
+        currentHudTextId++;
+        missionTexts[currentHudTextId].SetActive(true);
+
+        hudTextTimer = 0.0f;
+        runTextTimer = true;
     }
 
     public void FixedUpdate()
