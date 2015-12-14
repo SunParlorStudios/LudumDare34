@@ -14,6 +14,10 @@ public class UIHandler : MonoBehaviour
     private GameObject[] inventoryResources;
     private Text[] inventoryResourceTexts;
 
+    private GameObject homeIndicatorArrow;
+
+    public Camera camera;
+
     private const int numResources = 6;
 
 	void Awake()
@@ -46,6 +50,10 @@ public class UIHandler : MonoBehaviour
                     }
                 }
             }
+            else if (child.name == "HomeWorldIndicator")
+            {
+                homeIndicatorArrow = child;
+            }
         }
 	}
 
@@ -53,7 +61,16 @@ public class UIHandler : MonoBehaviour
     {
         int val;
         int required;
-        
+
+        Vector3 playerScreenPos = camera.WorldToScreenPoint(player.transform.position);
+
+        Vector3 p1 = playerScreenPos;
+        Vector3 p2 = camera.WorldToScreenPoint(baseController.gameObject.transform.position);
+
+        float a = Mathf.Atan2(p2.y - p1.y, p2.x - p1.x);
+        homeIndicatorArrow.transform.rotation = Quaternion.Euler(0.0f, 0.0f, a * Mathf.Rad2Deg + 90.0f);
+        homeIndicatorArrow.transform.position = new Vector2(playerScreenPos.x + Mathf.Cos(a) * 64.0f, playerScreenPos.y + Mathf.Sin(a) * 64.0f);
+
         for (int i = 0; i < numResources; ++i)
         {
             val = player.inventory[(World.Resources)i];
