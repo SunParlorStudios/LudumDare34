@@ -250,12 +250,6 @@ public class Player : MonoBehaviour
 
     public void LateUpdate()
     {
-        if (Input.GetKeyUp(KeyCode.G) == true)
-        {
-            Kill();
-            return;
-        }
-
         wobbleTimer += Time.deltaTime;
 
         if (wobbleTimer > Mathf.PI * 2.0f)
