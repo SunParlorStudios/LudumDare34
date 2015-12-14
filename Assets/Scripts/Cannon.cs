@@ -26,20 +26,23 @@ public class Cannon : MonoBehaviour
 
     public void OnFire()
     {
-        float angle = (transform.rotation.eulerAngles.z + 5.0f) * Mathf.Deg2Rad;
+        if (player != null)
+        { 
+            float angle = (transform.rotation.eulerAngles.z + 5.0f) * Mathf.Deg2Rad;
 
-        SoundController.instance.Play(6);
+            SoundController.instance.Play(6);
 
-        ExplosionParticle.Create(transform.position);
+            ExplosionParticle.Create(transform.position);
 
-        player.grounded = false;
-        player.invincible = false;
-        player.flyVelocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
-        player.flySpeed = force;
-        player.ignoreGravityTimer = 0.2f;
-        player.Show();
-        player.gameCamera.state = CameraController.State.InCannon;
-        player = null;
+            player.grounded = false;
+            player.invincible = false;
+            player.flyVelocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
+            player.flySpeed = force;
+            player.ignoreGravityTimer = 0.2f;
+            player.Show();
+            player.gameCamera.state = CameraController.State.InCannon;
+            player = null;
+        }
     }
 
     public void OnDrawGizmos()
