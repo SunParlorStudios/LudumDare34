@@ -37,6 +37,7 @@ public class Pickup : MonoBehaviour
         {
             collider.gameObject.GetComponent<Player>().inventory[type]++;
             Destroy(gameObject);
+            SoundController.instance.Play(Random.Range(2, 3), false);
         }
     }
 }
