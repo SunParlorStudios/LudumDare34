@@ -26,6 +26,8 @@ public class GameController : MonoBehaviour
     public float cometSpawnRate = 300.0f;
 
     public bool[] worldTypesUnlocked;
+    public bool cannonRotationUnlocked;
+    public bool cannonBoosterUnlocked;
 
     public delegate void OnCometCreatedDelegate(Comet comet);
     public event OnCometCreatedDelegate OnCometCreated;
@@ -50,6 +52,9 @@ public class GameController : MonoBehaviour
         worldTypesUnlocked[(int)WorldTypes.Electric] = false;
         worldTypesUnlocked[(int)WorldTypes.Toxic] = false;
         worldTypesUnlocked[(int)WorldTypes.Fire] = false;
+
+        cannonRotationUnlocked = false;
+        cannonBoosterUnlocked = false;
 
         instance = this;
     }
