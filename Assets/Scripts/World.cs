@@ -76,9 +76,9 @@ public class World : MonoBehaviour
         for (int i = 0; i < numberOfPickups; i++)
         {
             float angle = (360 / numberOfPickups) * i;
-            GameObject newPickup = (GameObject)Instantiate(obj, Vector3.zero, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle + 90.0f)));
+            GameObject newPickup = (GameObject)Instantiate(obj, Vector3.zero, Quaternion.Euler(new Vector3(0.0f, 0.0f, angle - 90.0f)));
             newPickup.transform.parent = transform;
-            newPickup.transform.localScale = (transform.localScale * -1).normalized;
+            newPickup.transform.localScale = new Vector3(1.0f / transform.localScale.x * 0.75f, 1.0f / transform.localScale.y * 0.75f, 0.0f);
             newPickup.transform.position = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset)) + transform.position;
         }
 
