@@ -19,7 +19,7 @@ public class Pickup : MonoBehaviour
 
     public void Update()
     {
-        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius)
+        if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
         {
             followPlayer = true;
 
