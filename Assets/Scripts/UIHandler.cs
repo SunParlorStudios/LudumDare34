@@ -21,10 +21,13 @@ public class UIHandler : MonoBehaviour
 
     public Camera camera;
 
+    public static UIHandler instance;
+
     private const int numResources = 6;
 
 	void Awake()
     {
+        instance = this;
         int children = transform.childCount;
 
         baseResources = new GameObject[numResources];
@@ -80,11 +83,30 @@ public class UIHandler : MonoBehaviour
         indicator.camera = camera;
     }
 
+    public void Show()
+    {
+        Time.timeScale = 0.0f;
+        upgradeWindow.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        Time.timeScale = 1.0f;
+        upgradeWindow.SetActive(false);
+    }
+
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.O) == true)
+        if (Input.GetKeyUp(KeyCode.P) == true && player.delivering == false)
         {
-            upgradeWindow.SetActive(!upgradeWindow.activeSelf);
+            if (upgradeWindow.activeSelf == false)
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
         }
 
         int val;

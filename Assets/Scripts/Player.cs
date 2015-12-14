@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     private float maxFlickerTimer = 0.01f;
     public bool dead;
     public bool invincible;
+    public bool delivering;
     private bool visible;
 
     public CameraController gameCamera;
@@ -90,6 +91,7 @@ public class Player : MonoBehaviour
         invincible = false;
         dead = false;
         visible = true;
+        delivering = false;
 
         upgrades = new List<Upgrade>();
         hasUpgrade = new bool[9];
@@ -121,11 +123,33 @@ public class Player : MonoBehaviour
             case 2:
                 upgrade = PlanetUnlock.Create(WorldTypes.Toxic);
                 break;
+            case 3:
+                gameController.cannonBoosterUnlocked = true;
+                break;
+            case 4:
+                gameController.cannonRotationUnlocked = true;
+                break;
+            case 5:
+                gameController.orbitSpeedIncreased = true;
+                break;
+            case 6:
+                gameController.cannonShieldUnlocked = true;
+                break;
+            case 7:
+                gameController.pickupDoubleUnlocked = true;
+                break;
+            case 8:
+                gameController.pickupRangeIncreaseUnlocked = true;
+                break;
             default:
                 upgrade = PlanetUnlock.Create(WorldTypes.Fire);
                 break;
         }
-        upgrades.Add(upgrade);
+
+        if (id <= 2)
+        {
+            upgrades.Add(upgrade);
+        }
     }
 
     public bool HasUpgrade(int id)
@@ -149,7 +173,7 @@ public class Player : MonoBehaviour
 
     public void Kill()
     {
-        if (dead == true || invincible == true)
+        if (dead == true || invincible == true || delivering == true)
         {
             return;
         }
@@ -368,7 +392,7 @@ public class Player : MonoBehaviour
                             gameCamera.state = CameraController.State.Default;
                         }
 
-                        if (gameController.cannonShieldUnlocked == true)
+                        if (gameController.cannonShieldUnlocked == false)
                         {
                             transform.FindChild("CannonShield").gameObject.SetActive(false);
                             invincible = false;

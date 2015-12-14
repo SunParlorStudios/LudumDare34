@@ -48,13 +48,20 @@ public class UIUpgrade : MonoBehaviour
 
     public void OnPointerUp(BaseEventData evt)
     {
+        if (GameController.instance.player.HasUpgrade(upgradeID) == true || GameController.instance.currentLevel <= requiredLevel || GameController.instance.player.delivering == false)
+        {
+            selectionBox.GetComponent<Image>().overrideSprite = null;
+            return;
+        }
+
         selectionBox.GetComponent<Image>().overrideSprite = null;
         GameController.instance.player.AddUpgrade(upgradeID);
+        UIHandler.instance.Hide();
     }
 
         void Update()
     {
         checkMark.SetActive(GameController.instance.player.HasUpgrade(upgradeID));
-        cross.SetActive(GameController.instance.currentLevel < requiredLevel);
+        cross.SetActive(GameController.instance.currentLevel <= requiredLevel);
 	}
 }
