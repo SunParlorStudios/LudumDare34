@@ -26,6 +26,7 @@ public class SoundController : MonoBehaviour
         audioSources[0].volume = 0.3f;
         audioSources[4].volume = 0.3f;
         audioSources[5].volume = 0.15f;
+        audioSources[7].volume = 0.7f;
 
         Play(0, true);
     }

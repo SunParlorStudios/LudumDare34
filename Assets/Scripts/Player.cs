@@ -311,7 +311,7 @@ public class Player : MonoBehaviour
                     if (gameController.worldTypesUnlocked[(int)currentWorlds[i].type] == false)
                     {
                         Jump();
-                        SoundController.instance.Play(5);
+                        SoundController.instance.Play(5, false, true);
                     }
 
                     if (lastWorld != currentWorlds[i])

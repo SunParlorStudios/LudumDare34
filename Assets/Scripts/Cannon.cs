@@ -28,6 +28,8 @@ public class Cannon : MonoBehaviour
     {
         float angle = (transform.rotation.eulerAngles.z + 5.0f) * Mathf.Deg2Rad;
 
+        SoundController.instance.Play(6);
+
         ExplosionParticle.Create(transform.position);
 
         player.grounded = false;
