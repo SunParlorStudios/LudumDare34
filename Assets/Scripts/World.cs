@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+public enum WorldTypes : int
+{
+    Default,
+    Toxic,
+    Electric,
+    Fire
+}
+
 public class World : MonoBehaviour
 {
     public enum Resources : int
@@ -38,6 +46,10 @@ public class World : MonoBehaviour
     [Range(0, 20)]public int numberOfPickups = 10;
     public World.Resources typeOfResource;
     public float pickUpOffset = 1.0f;
+
+    public WorldTypes type;
+
+    private GameObject lockIcon;
 
     public void Awake()
     {
@@ -80,9 +92,15 @@ public class World : MonoBehaviour
             newPickup.transform.parent = transform;
             newPickup.transform.localScale = new Vector3(1.0f / transform.localScale.x * 0.6f, 1.0f / transform.localScale.y * 0.6f, 0.0f);
             newPickup.transform.position = new Vector3(Mathf.Cos(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset), Mathf.Sin(angle * Mathf.Deg2Rad) * (surfaceRadius + pickUpOffset)) + transform.position;
+
+            newPickup.GetComponent<Pickup>().world = this;
         }
 
         transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, Random.Range(0, 360)));
+
+        lockIcon = (GameObject)Instantiate(UnityEngine.Resources.Load("WorldIconLock", typeof (GameObject)));
+        lockIcon.transform.SetParent(transform, false);
+        lockIcon.transform.localPosition = Vector3.zero;
     }
 
     public Vector3 GetWorldScale(Transform transform)
@@ -101,6 +119,17 @@ public class World : MonoBehaviour
 
     public void Update()
     {
+        if (lockIcon != null)
+        {
+            lockIcon.transform.rotation = Quaternion.Euler(Vector3.zero);
+
+            if (GameController.instance.worldTypesUnlocked[(int)type] == true)
+            {
+                Destroy(lockIcon);
+                lockIcon = null;
+            }
+        }
+
         transform.Rotate(new Vector3(0, 0, (rotationDirection == RotationDirection.Left ? rotationSpeed : -rotationSpeed) * Time.deltaTime));
 
         UpdateScale();
