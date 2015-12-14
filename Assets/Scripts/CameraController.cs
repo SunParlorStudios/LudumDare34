@@ -47,7 +47,7 @@ public class CameraController : MonoBehaviour
                 newPos.z = Mathf.Lerp(transform.position.z, offsetZ, smoothing * Time.deltaTime);
                 transform.position = newPos;
 
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0.0f, 0.0f, target.transform.localEulerAngles.z)), angularSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0.0f, 0.0f, Mathf.Clamp(target.transform.localEulerAngles.z, -3, 3))), angularSpeed * Time.deltaTime);
                 onFocusedWorldCalled = false;
                 break;
             case State.FocusWorld:

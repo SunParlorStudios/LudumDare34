@@ -35,6 +35,12 @@ public class Cannon : MonoBehaviour
         player = null;
     }
 
+    public void OnDrawGizmos()
+    {
+        float angle = (transform.rotation.eulerAngles.z + 5.0f) * Mathf.Deg2Rad;
+
+        Gizmos.DrawRay(transform.position, new Vector3(Mathf.Cos(angle) * 500.0f, Mathf.Sin(angle) * 500.0f, 0.0f));
+    }
 
     public void OnTriggerEnter2D(Collider2D collider)
     {
