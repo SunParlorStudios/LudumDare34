@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < currentWorlds.Count; i++)
         {
-            if (currentWorlds[i] == lastWorld && grounded == false && lastWorld != null && currentWorlds.Count > 1)
+            if (grounded == false && lastWorld == currentWorlds[i])
             {
                 continue;
             }
@@ -202,11 +202,11 @@ public class Player : MonoBehaviour
 
                     if (lastWorld != currentWorlds[i])
                     {
+                        grounded = true;
                         speed *= -1.0f;
+                        lastWorld = currentWorlds[i];
                     }
 
-                    lastWorld = currentWorlds[i];
-                    grounded = true;
                     flySpeed = defaultFlySpeed;
                 }
                 else if (grounded == false)
