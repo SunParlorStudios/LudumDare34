@@ -346,9 +346,14 @@ public class Player : MonoBehaviour
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, playerRadius);
+        Gizmos.DrawWireSphere(transform.position, GetPickupRadius());
 
         Gizmos.color = new Color(1.0f, 1.0f, 0.5f, 1.0f);
-        Gizmos.DrawWireSphere(transform.position, pickUpRadius);
+        Gizmos.DrawWireSphere(transform.position, GetPickupRadius());
+    }
+
+    public float GetPickupRadius()
+    {
+        return pickUpRadius * (gameController.pickupRangeIncreaseUnlocked == true ? 4.0f : 1.0f);
     }
 }

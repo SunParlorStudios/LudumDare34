@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour
     public bool[] worldTypesUnlocked;
     public bool cannonRotationUnlocked;
     public bool cannonBoosterUnlocked;
+    public bool pickupRangeIncreaseUnlocked;
 
     public delegate void OnCometCreatedDelegate(Comet comet);
     public event OnCometCreatedDelegate OnCometCreated;
@@ -55,6 +56,7 @@ public class GameController : MonoBehaviour
 
         cannonRotationUnlocked = false;
         cannonBoosterUnlocked = false;
+        pickupRangeIncreaseUnlocked = true;
 
         instance = this;
     }
