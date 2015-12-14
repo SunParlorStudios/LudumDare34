@@ -18,6 +18,7 @@ public class Cannon : MonoBehaviour
     {
         if (player != null)
         {
+            player.Hide();
             player.transform.position = transform.position;
         }
 	}
@@ -32,6 +33,7 @@ public class Cannon : MonoBehaviour
         player.flyVelocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0.0f);
         player.flySpeed = force;
         player.ignoreGravityTimer = 0.2f;
+        player.Show();
         player = null;
     }
 

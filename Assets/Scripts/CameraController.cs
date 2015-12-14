@@ -6,7 +6,8 @@ public class CameraController : MonoBehaviour
     public enum State
     {
         Default,
-        FocusWorld
+        FocusWorld,
+        PlayerKilled
     }
 
     public Transform target;
@@ -22,10 +23,13 @@ public class CameraController : MonoBehaviour
 
     public State state;
     public float offsetZ;
+    public float deathOffsetZ = -5.0f;
 
     public delegate void OnFocusedWorldDelegate();
     public event OnFocusedWorldDelegate onFocusedWorld;
     public bool onFocusedWorldCalled = false;
+
+    private Player player;
 
     private World worldBase;
 
@@ -34,6 +38,15 @@ public class CameraController : MonoBehaviour
         postProcessing = new Material(Shader.Find("Hidden/StaticShader"));
         worldBase = GameObject.Find("WorldHome").GetComponent<World>();
         onFocusedWorldCalled = false;
+
+        player = target.GetComponent<Player>();
+
+        postProcessing.SetFloat("_Shift", imageDistortionShift);
+        postProcessing.SetFloat("_Frequency", imageDistortionFrequency);
+        postProcessing.SetFloat("_Bloom", 1.0f - bloom);
+        postProcessing.SetFloat("_BloomBlur", bloomBlurDistance);
+        postProcessing.SetFloat("_BloomPasses", bloomPasses);
+        postProcessing.SetFloat("_DoBloom", doBloom == true ? 1.0f : 0.0f);
     }
 
     public void Update()
@@ -64,20 +77,25 @@ public class CameraController : MonoBehaviour
                     }
                 }
                 break;
+            case State.PlayerKilled:
+                newPos = Vector3.Lerp(transform.position, player.deathPosition, smoothing * Time.deltaTime);
+                newPos.z = Mathf.Lerp(transform.position.z, offsetZ + deathOffsetZ, smoothing * Time.deltaTime * 0.25f);
+                transform.position = newPos;
+
+                if (Mathf.Abs(newPos.z) >= Mathf.Abs((offsetZ + deathOffsetZ) * 0.95f))
+                {
+                    state = State.Default;
+                }
+                break;
         }
 	}
 
     public void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
 #if !UNITY_WEBGL
-        postProcessing.SetFloat("_Shift", imageDistortionShift);
-        postProcessing.SetFloat("_Frequency", imageDistortionFrequency);
-        postProcessing.SetFloat("_Bloom", 1.0f - bloom);
-        postProcessing.SetFloat("_BloomBlur", bloomBlurDistance);
-        postProcessing.SetFloat("_BloomPasses", bloomPasses);
-        postProcessing.SetFloat("_DoBloom", doBloom == true ? 1.0f : 0.0f);
-
         Graphics.Blit(source, destination, postProcessing);
+#else
+        Graphics.Blit(source, destination);
 #endif
     }
 }
