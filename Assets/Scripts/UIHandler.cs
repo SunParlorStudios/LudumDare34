@@ -56,6 +56,9 @@ public class UIHandler : MonoBehaviour
         
         for (int i = 0; i < numResources; ++i)
         {
+            val = player.inventory[(World.Resources)i];
+            inventoryResourceTexts[i].text = val.ToString();
+
             val = baseController.resources[(World.Resources)i];
             required = GameController.GetValueFromRequirement(gameController.requirements[gameController.currentLevel], i);
 
@@ -72,10 +75,6 @@ public class UIHandler : MonoBehaviour
 
             baseResourceTexts[i].color = val < required ? Color.red : Color.green;
             baseResourceTexts[i].text = val.ToString() + "/" + required.ToString();
-
-            val = player.inventory[(World.Resources)i];
-
-            inventoryResourceTexts[i].text = val.ToString();
         }
     }
 }
