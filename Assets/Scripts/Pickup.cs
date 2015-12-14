@@ -15,7 +15,7 @@ public class Pickup : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
-    public void FixedUpdate()
+    public void Update()
     {
         if (followPlayer == true || Vector3.Distance(player.transform.position, transform.position) < player.pickUpRadius)
         {
@@ -24,7 +24,7 @@ public class Pickup : MonoBehaviour
             transform.position = Vector3.Lerp(
                 transform.position, 
                 player.transform.position,
-                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.pickUpRadius)) * player.pickUpStrength, 0.022f)
+                Mathf.Max((1.0f - (Vector3.Distance(player.transform.position, transform.position) / player.pickUpRadius)) * player.pickUpStrength, 0.022f * Time.deltaTime * 100.0f)
             );
         }
     }
