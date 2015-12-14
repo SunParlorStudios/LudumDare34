@@ -188,7 +188,7 @@ public class Player : MonoBehaviour
 
             if (distance < currentWorlds[i].gravityRadius)
             {
-                Vector3 newPosition = Vector3.MoveTowards(position, worldPosition, currentWorlds[i].gravityStrength * (1.0f - distance / currentWorlds[i].gravityRadius));
+                Vector3 newPosition = Vector3.MoveTowards(position, worldPosition, currentWorlds[i].gravityStrength * 100.0f * Time.deltaTime * (1.0f - distance / currentWorlds[i].gravityRadius));
                 float newDistance = Vector3.Distance(newPosition, worldPosition);
 
                 radius = currentWorlds[i].surfaceRadius + playerRadius;

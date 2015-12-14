@@ -31,6 +31,7 @@ public class Comet : MonoBehaviour
         {
             ExplosionParticle.Create(transform.position);
             collider.gameObject.GetComponent<Player>().Kill();
+            Destroy(gameObject);
         }
     }
 }
