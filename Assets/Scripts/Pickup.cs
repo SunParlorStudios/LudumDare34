@@ -36,6 +36,12 @@ public class Pickup : MonoBehaviour
         if (collider.gameObject.tag == "Player" && GameController.instance.worldTypesUnlocked[(int)world.type] == true)
         {
             collider.gameObject.GetComponent<Player>().inventory[type]++;
+
+            if (GameController.instance.pickupDoubleUnlocked == true)
+            {
+                collider.gameObject.GetComponent<Player>().inventory[type]++;
+            }
+
             Destroy(gameObject);
             SoundController.instance.Play(Random.Range(2, 3), false);
         }
