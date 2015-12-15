@@ -106,7 +106,6 @@ public class BaseController : MonoBehaviour
     {
         player.invincible = true;
         player.delivering = true;
-        gameController.currentLevel++;
         gameController.DoNextMissionText();
 
         if (doInterpolate == false)
@@ -126,6 +125,8 @@ public class BaseController : MonoBehaviour
 
             worldsToBeSwallowed = gameController.FindWorldsInRadius(transform.position, endSurfaceRadius);
 
+            cameraController.onFocusedWorldCalled = false;
+            cameraController.transform.position = new Vector3(cameraController.transform.position.x, cameraController.transform.position.y, -10.0f);
             cameraController.state = CameraController.State.FocusWorld;
             cameraController.offsetZ = -10 - world.surfaceRadius;
 
@@ -138,6 +139,8 @@ public class BaseController : MonoBehaviour
                 }
             }
         }
+
+        gameController.currentLevel++;
     }
 
     public void EndUpgrade()
@@ -158,6 +161,8 @@ public class BaseController : MonoBehaviour
         player.transform.position = new Vector3(Mathf.Cos(angle) * world.surfaceRadius + world.transform.position.x, Mathf.Sin(angle) * world.surfaceRadius + world.transform.position.y, player.transform.position.z);
         player.invincible = false;
         player.delivering = false;
+
+        OnDeliverResources();
     }
 
     public void Update()
