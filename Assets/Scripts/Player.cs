@@ -209,6 +209,16 @@ public class Player : MonoBehaviour
             upgrades[i].Execute();
         }
 
+        float r = BaseController.instance.resourceTimer / BaseController.instance.resourceTimerMax;
+
+        if (r <= 0.0f)
+        {
+            gameCamera.state = CameraController.State.PlanetCollapse;
+            delivering = invincible = dead = true;
+            UIHandler.instance.outOfTime.enabled = true;
+            return;
+        }
+
         ignoreGravityTimer -= Time.deltaTime;
         ignoreGravityTimer = Mathf.Max(0.0f, ignoreGravityTimer);
 

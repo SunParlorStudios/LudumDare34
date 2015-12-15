@@ -16,6 +16,8 @@ public class UIHandler : MonoBehaviour
     private GameObject[] inventoryResources;
     private Text[] inventoryResourceTexts;
 
+    public Text outOfTime;
+
     private GameObject homeIndicatorArrow;
     private GameObject upgradeWindow;
 
@@ -63,6 +65,11 @@ public class UIHandler : MonoBehaviour
             else if (child.name == "UpgradeCanvas")
             {
                 upgradeWindow = child.transform.GetChild(0).gameObject;
+            }
+            else if (child.name == "RanOutOfTime")
+            {
+                outOfTime = child.GetComponent<Text>();
+                outOfTime.enabled = false;
             }
         }
 

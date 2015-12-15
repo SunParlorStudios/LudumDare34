@@ -8,7 +8,8 @@ public class CameraController : MonoBehaviour
         Default,
         FocusWorld,
         PlayerKilled,
-        InCannon
+        InCannon,
+        PlanetCollapse
     }
 
     public Transform target;
@@ -26,6 +27,7 @@ public class CameraController : MonoBehaviour
     public float offsetZ;
     public float deathOffsetZ = -5.0f;
     public float cannonOffsetZ = 10.0f;
+    public float collapseOffsetZ = -10.0f;
 
     public delegate void OnFocusedWorldDelegate();
     public event OnFocusedWorldDelegate onFocusedWorld;
@@ -93,6 +95,16 @@ public class CameraController : MonoBehaviour
                 newPos = Vector3.Lerp(transform.position, target.position, smoothing * Time.deltaTime);
                 newPos.z = Mathf.Lerp(transform.position.z, offsetZ + cannonOffsetZ, smoothing * Time.deltaTime * 0.1f);
                 transform.position = newPos;
+                break;
+            case State.PlanetCollapse:
+                newPos = Vector3.Lerp(transform.position, worldBase.transform.position, smoothing * Time.deltaTime);
+                newPos.z = Mathf.Lerp(transform.position.z, offsetZ + collapseOffsetZ, Time.deltaTime);
+                transform.position = newPos;
+
+                if (Mathf.Abs(newPos.z) >= Mathf.Abs((offsetZ + collapseOffsetZ) * 0.95f))
+                {
+                    BaseController.instance.Destroy();
+                }
                 break;
         }
 	}

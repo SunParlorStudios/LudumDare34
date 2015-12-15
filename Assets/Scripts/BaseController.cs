@@ -29,12 +29,15 @@ public class BaseController : MonoBehaviour
     public float resourceTimer = 60.0f;
     public float resourceTimerMax = 60.0f;
 
+    private bool destroyed;
+
     public static BaseController instance;
 
     public void Awake()
     {
         instance = this;
 
+        destroyed = false;
 
         resources = new Dictionary<World.Resources, int>();
         resources.Add(World.Resources.Type1, 0);
@@ -67,6 +70,35 @@ public class BaseController : MonoBehaviour
         {
             UIHandler.instance.Show();
             DoUpgrade();
+        }
+    }
+
+    public void Destroy()
+    {
+        if (destroyed == true)
+        {
+            return;
+        }
+
+        destroyed = true;
+
+        beginSurfaceRadius = world.surfaceRadius;
+        beginGravityRadius = world.gravityRadius;
+        endSurfaceRadius = 0.0f;
+        endGravityRadius = 0.0f;
+        interpolateTime = 0.0f;
+
+        for (int i = 0; i < 5; ++i)
+        {
+            Vector3 random;
+
+            float a = Random.Range(0.0f, 6.28f);
+            float r = Random.Range(0.0f, world.surfaceRadius);
+            random.x = Mathf.Cos(a) * r;
+            random.y = Mathf.Sin(a) * r;
+            random.z = 0.0f;
+
+            ExplosionParticle.Create(transform.position + random);
         }
     }
 
@@ -130,6 +162,22 @@ public class BaseController : MonoBehaviour
 
     public void Update()
     {
+        if (destroyed == true)
+        {
+            interpolateTime += Time.deltaTime * 0.5f;
+            interpolateTime = Mathf.Min(interpolateTime, 1.0f);
+
+            world.surfaceRadius = Mathf.LerpUnclamped(beginSurfaceRadius, endSurfaceRadius, EaseInElastic(interpolateTime, 0.0f, 1.0f, 1.0f));
+            world.gravityRadius = Mathf.LerpUnclamped(beginGravityRadius, endGravityRadius, EaseInElastic(interpolateTime, 0.0f, 1.0f, 1.0f));
+
+            if (interpolateTime >= 1.0f)
+            {
+                Application.LoadLevel(0);
+            }
+
+            return;
+        }
+
         if (doInterpolate == true)
         {
             float angle = Mathf.Atan2(player.transform.position.y - world.transform.position.y, player.transform.position.x - world.transform.position.x);
@@ -167,5 +215,12 @@ public class BaseController : MonoBehaviour
         var ts = (t /= d) * t;
         var tc = ts * t;
         return b + c * (56 * tc * ts + -175 * ts * ts + 200 * tc + -100 * ts + 20 * t);
+    }
+
+    private float EaseInElastic(float t, float b, float c, float d)
+    {
+        var ts = (t /= d) * t;
+        var tc = ts * t;
+        return b + c * (56 * tc * ts + -105 * ts * ts + 60 * tc + -10 * ts);
     }
 }
