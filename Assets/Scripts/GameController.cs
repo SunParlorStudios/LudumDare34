@@ -54,8 +54,11 @@ public class GameController : MonoBehaviour
             worlds.Add(sceneWorlds[i].GetComponent<World>());
         }
 
-        asteroidFocusMin = GameObject.Find("AsteroidFocusMin").transform;
-        asteroidFocusMax = GameObject.Find("AsteroidFocusMax").transform;
+        if (GameObject.Find("AsteroidFocusMin") != null)
+        {
+            asteroidFocusMin = GameObject.Find("AsteroidFocusMin").transform;
+            asteroidFocusMax = GameObject.Find("AsteroidFocusMax").transform;
+        }
 
         worldTypesUnlocked = new bool[4];
         worldTypesUnlocked[(int)WorldTypes.Default] = true;
@@ -72,15 +75,18 @@ public class GameController : MonoBehaviour
 
         instance = this;
 
-        missionTexts = new GameObject[10];
-        for (int i = 0; i < 10; i++)
+        if (GameObject.Find("Mission1Title") != null)
         {
-            missionTexts[i] = GameObject.Find("Mission" + (i + 1) + "Title");
-            missionTexts[i].SetActive(false);
-        }
+            missionTexts = new GameObject[10];
+            for (int i = 0; i < 10; i++)
+            {
+                missionTexts[i] = GameObject.Find("Mission" + (i + 1) + "Title");
+                missionTexts[i].SetActive(false);
+            }
 
-        currentHudTextId = -1;
-        DoNextMissionText();
+            currentHudTextId = -1;
+            DoNextMissionText();
+        }
     }
     
     public void OnDeliverResources()
@@ -126,28 +132,31 @@ public class GameController : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Random.Range(0, (int)cometSpawnRate) == 1)
+        if (asteroidFocusMin != null)
         {
-            Comet comet = ((GameObject)Instantiate(asteroidPrefab)).GetComponent<Comet>();
+            if (Random.Range(0, (int)cometSpawnRate) == 1)
+            {
+                Comet comet = ((GameObject)Instantiate(asteroidPrefab)).GetComponent<Comet>();
 
-            var hitPoint = Vector3.Lerp(asteroidFocusMin.transform.position, asteroidFocusMax.transform.position, Random.Range(0.0f, 1.0f));
+                var hitPoint = Vector3.Lerp(asteroidFocusMin.transform.position, asteroidFocusMax.transform.position, Random.Range(0.0f, 1.0f));
 
-            float angle = Random.Range(0, 360) * Mathf.Deg2Rad;
-            Vector3 start = new Vector3(Mathf.Cos(angle) * 50.0f, Mathf.Sin(angle) * 50.0f, 0.0f);
+                float angle = Random.Range(0, 360) * Mathf.Deg2Rad;
+                Vector3 start = new Vector3(Mathf.Cos(angle) * 50.0f, Mathf.Sin(angle) * 50.0f, 0.0f);
 
-            float angle2 = Mathf.Atan2(start.y - hitPoint.y, start.x - hitPoint.x) + 180 * Mathf.Deg2Rad;
-            Vector3 end = new Vector3(Mathf.Cos(angle2) * 50.0f, Mathf.Sin(angle2) * 50.0f, 0.0f);
+                float angle2 = Mathf.Atan2(start.y - hitPoint.y, start.x - hitPoint.x) + 180 * Mathf.Deg2Rad;
+                Vector3 end = new Vector3(Mathf.Cos(angle2) * 50.0f, Mathf.Sin(angle2) * 50.0f, 0.0f);
 
-            comet.speed = Random.Range(0.2f, 0.3f);
-            comet.transform.position = start + player.transform.position;
-            comet.start = start + player.transform.position;
-            comet.end = end + player.transform.position;
+                comet.speed = Random.Range(0.2f, 0.3f);
+                comet.transform.position = start + player.transform.position;
+                comet.start = start + player.transform.position;
+                comet.end = end + player.transform.position;
 
-            float angle3 = (Mathf.Atan2(comet.start.y - comet.end.y, comet.start.x - comet.end.x) + Mathf.PI) * Mathf.Rad2Deg;
-            comet.transform.rotation = Quaternion.Euler(0, 0, angle3);
+                float angle3 = (Mathf.Atan2(comet.start.y - comet.end.y, comet.start.x - comet.end.x) + Mathf.PI) * Mathf.Rad2Deg;
+                comet.transform.rotation = Quaternion.Euler(0, 0, angle3);
 
-            if (OnCometCreated != null)
-                OnCometCreated(comet);
+                if (OnCometCreated != null)
+                    OnCometCreated(comet);
+            }
         }
     }
 
