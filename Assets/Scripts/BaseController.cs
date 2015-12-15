@@ -115,7 +115,7 @@ public class BaseController : MonoBehaviour
             Dictionary<World.Resources, int> newResources = new Dictionary<World.Resources, int>();
             foreach (KeyValuePair<World.Resources, int> entry in resources)
             {
-                newResources.Add(entry.Key, Mathf.Max(resources[entry.Key] - GameController.GetValueFromRequirement(gameController.requirements[gameController.currentLevel], (int)entry.Key)));
+                newResources.Add(entry.Key, Mathf.Max(0, resources[entry.Key] - GameController.GetValueFromRequirement(gameController.requirements[gameController.currentLevel], (int)entry.Key)));
             }
             resources = newResources;
 
