@@ -111,10 +111,6 @@ public class CameraController : MonoBehaviour
 
     public void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-#if !UNITY_WEBGL
         Graphics.Blit(source, destination, postProcessing);
-#else
-        Graphics.Blit(source, destination);
-#endif
     }
 }

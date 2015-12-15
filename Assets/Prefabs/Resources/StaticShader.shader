@@ -19,7 +19,7 @@
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			#pragma target 3.0
+			#pragma target 2.0
 			
 			#include "UnityCG.cginc"
 
@@ -67,9 +67,9 @@
 
 				half count = 0.0f;
 
-				for (half a = 0.0f; a < pi * 2.0f; a += step_angle)
+				for (half a = 0.0f; a < 6.28f; a += 2.09f)
 				{
-					for (half s = 0.0f; s < blur; s += step)
+					for (half s = 0.0f; s < 0.025f; s += 0.0083)
 					{
 						count += 0.5f;
 						blurred += tex2D(_MainTex, half2(uv.x + cos(a) * s, uv.y + sin(a) * s * 1.5f));
